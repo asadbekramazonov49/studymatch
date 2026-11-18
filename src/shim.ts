@@ -54,8 +54,31 @@ function installSupabase() {
     };
   }
 
+
+  // Real-time signalling (used for calls): broadcast on per-user channels.
+  const chans = {};
+  function getCh(name) {
+    if (!chans[name]) {
+      const c = sb.channel(name);
+      chans[name] = { c, ready: new Promise((res) => c.subscribe((st) => { if (st === 'SUBSCRIBED') res(); })) };
+    }
+    return chans[name];
+  }
+  const rt = {
+    subscribe(name, handler) {
+      const c = sb.channel(name);
+      c.on('broadcast', { event: 'sig' }, (m) => handler(m.payload)).subscribe();
+      return () => sb.removeChannel(c);
+    },
+    async send(name, payload) {
+      const x = getCh(name);
+      await x.ready;
+      await x.c.send({ type: 'broadcast', event: 'sig', payload });
+    },
+  };
   window.claude = {
     use: async (n) => {
+      if (n === 'rt') return rt;
       if (n === 'user') return { id: () => ready };
       if (n === 'db') return { collection: col };
       if (n === 'assets') return {
