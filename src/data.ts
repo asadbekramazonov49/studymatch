@@ -42,7 +42,7 @@ export const MAJORS = M.map(([cat, en, ru, uz, den, dru, duz]) => ({
 export const MAJOR_CATS = ['STEM', 'Business', 'Health', 'Social', 'Humanities', 'Design'];
 
 export type Guide = {
-  id: string; cat: 'IELTS' | 'SAT' | 'Abroad' | 'Scholarships';
+  id: string; cat: 'IELTS' | 'SAT' | 'Abroad' | 'Scholarships' | 'Resources';
   title: L3; sum: L3; pts: { en: string[]; ru: string[]; uz: string[] };
   links: { l: string; u: string }[];
 };
@@ -174,18 +174,100 @@ export const GUIDES: Guide[] = [
       { l: 'Türkiye Burslari', u: 'https://turkiyeburslari.gov.tr' }, { l: 'Stipendium Hungaricum', u: 'https://stipendiumhungaricum.hu' },
     ],
   },
+  {
+    id: 'resources', cat: 'Resources',
+    title: { en: 'Free resources worth bookmarking', ru: 'Бесплатные ресурсы для закладок', uz: 'Xatcho‘pga qo‘shishga arziydigan bepul manbalar' },
+    sum: { en: 'Official and well-known free sites for exam practice and academic English.', ru: 'Официальные и известные бесплатные сайты для практики экзаменов и академического английского.', uz: 'Imtihon mashqi va akademik ingliz tili uchun rasmiy va mashhur bepul saytlar.' },
+    pts: {
+      en: ['Khan Academy and the Bluebook app give free official digital SAT practice.', 'British Council LearnEnglish and BBC Learning English have free listening and reading practice that helps with IELTS.', 'Purdue OWL explains grammar, essay structure and citation for free.', 'Use Practice in Materials for short sample tests written for Studymatch.'],
+      ru: ['Khan Academy и приложение Bluebook дают бесплатную официальную практику цифрового SAT.', 'British Council LearnEnglish и BBC Learning English — бесплатная практика аудирования и чтения, полезная для IELTS.', 'Purdue OWL бесплатно объясняет грамматику, структуру эссе и цитирование.', 'В разделе «Практика» в Материалах есть короткие пробные тесты, написанные для Studymatch.'],
+      uz: ['Khan Academy va Bluebook ilovasi raqamli SAT uchun bepul rasmiy mashq beradi.', 'British Council LearnEnglish va BBC Learning English’da IELTS’ga yordam beradigan bepul tinglab tushunish va o‘qish mashqlari bor.', 'Purdue OWL grammatika, esse tuzilishi va iqtibos keltirishni bepul tushuntiradi.', 'Materiallardagi «Mashq» bo‘limida Studymatch uchun yozilgan qisqa sinov testlari bor.'],
+    },
+    links: [{ l: 'Bluebook', u: 'https://bluebook.collegeboard.org' }, { l: 'Khan Academy', u: 'https://www.khanacademy.org' }, { l: 'LearnEnglish', u: 'https://learnenglish.britishcouncil.org' }, { l: 'BBC Learning English', u: 'https://www.bbc.co.uk/learningenglish' }, { l: 'Purdue OWL', u: 'https://owl.purdue.edu' }],
+  },
 ];
 
-// Schools whose scholarships for Uzbek students we could confirm from the school's own pages.
-export const SCHOOLS = [
+// Schools. tier 'uzbek' = scholarship for Uzbek students confirmed on the school's own pages.
+// tier 'check' = known to offer aid to international students; Uzbek eligibility not confirmed.
+const UWC_SCH: L3 = { en: 'Need-based, full or partial. UWC says over 80% of IB Diploma students selected by a national committee receive some financial support.', ru: 'По потребности, полная или частичная. UWC сообщает, что более 80% учащихся IB Diploma, отобранных национальным комитетом, получают финансовую поддержку.', uz: 'Ehtiyojga qarab, to‘liq yoki qisman. UWC ma’lumotiga ko‘ra, milliy qo‘mita tanlagan IB Diploma o‘quvchilarining 80% dan ko‘pi moliyaviy yordam oladi.' };
+const UWC_HOW: L3 = { en: 'Apply through the UWC Uzbekistan National Committee, not to the college directly. After selection, families go through a financial assessment that sets the scholarship amount.', ru: 'Подавайте заявку через Национальный комитет UWC Узбекистан, а не напрямую в колледж. После отбора семья проходит финансовую оценку, по ней определяют размер стипендии.', uz: 'Kollejga to‘g‘ridan-to‘g‘ri emas, UWC O‘zbekiston Milliy qo‘mitasi orqali ariza bering. Tanlovdan keyin oila moliyaviy baholashdan o‘tadi, stipendiya miqdori shu bilan belgilanadi.' };
+const CHK_SCH: L3 = { en: 'Many schools like this offer need-based financial aid or scholarships to some international students. Amounts and availability vary and can be limited. We have not confirmed aid specifically for Uzbek citizens.', ru: 'Многие такие школы предлагают финансовую помощь по потребности или стипендии отдельным иностранным ученикам. Суммы и наличие различаются и могут быть ограничены. Помощь именно для граждан Узбекистана мы не подтверждали.', uz: 'Bunday maktablarning ko‘pchiligi ba’zi xorijiy o‘quvchilarga ehtiyojga qarab moliyaviy yordam yoki stipendiya beradi. Miqdori va mavjudligi har xil va cheklangan bo‘lishi mumkin. O‘zbekiston fuqarolari uchun alohida yordamni tasdiqlamadik.' };
+const CHK_HOW: L3 = { en: 'Check the school’s admissions and financial aid pages for the current application round, deadlines and whether international families can apply for aid. Typical requirements: transcripts, English test (TOEFL or Duolingo), recommendations and an interview.', ru: 'Смотрите на сайте школы страницы приёма и финансовой помощи: текущий набор, сроки и могут ли иностранные семьи подавать на помощь. Обычно нужны: табель, тест по английскому (TOEFL или Duolingo), рекомендации и собеседование.', uz: 'Maktab saytidagi qabul va moliyaviy yordam sahifalarini tekshiring: joriy qabul, muddatlar va xorijiy oilalar yordamga ariza bera olishi. Odatda kerak: baholar jadvali, ingliz tili testi (TOEFL yoki Duolingo), tavsiyanomalar va suhbat.' };
+type School = { n: string; co: string; city: string; url: string; tier: 'uzbek' | 'check'; scholar: L3; how: L3 };
+const uwc = (n: string, co: string, city: string): School => ({ n, co, city, url: 'https://uz.uwc.org', tier: 'uzbek', scholar: UWC_SCH, how: UWC_HOW });
+const chk = (n: string, co: string, city: string, u: string): School => ({ n, co, city, url: 'https://' + u, tier: 'check', scholar: CHK_SCH, how: CHK_HOW });
+const US = 'United States', UK = 'United Kingdom', CA = 'Canada';
+export const SCHOOLS: School[] = [
+  uwc('UWC Atlantic College', UK, 'Wales'), uwc('Pearson College UWC', CA, 'Victoria'), uwc('UWC Southeast Asia', 'Singapore', 'Singapore'),
+  uwc('UWC USA', US, 'Montezuma'), uwc('Waterford Kamhlaba UWCSA', 'Eswatini', 'Mbabane'), uwc('UWC Red Cross Nordic', 'Norway', 'Flekke'),
+  uwc('UWC Adriatic', 'Italy', 'Duino'), uwc('Li Po Chun UWC', 'Hong Kong SAR China', 'Hong Kong'), uwc('Mahindra UWC', 'India', 'Pune'),
+  uwc('UWC Costa Rica', 'Costa Rica', 'Santa Ana'), uwc('UWC Mostar', 'Bosnia and Herzegovina', 'Mostar'), uwc('UWC Maastricht', 'Netherlands', 'Maastricht'),
+  uwc('UWC Robert Bosch College', 'Germany', 'Freiburg'), uwc('UWC Dilijan', 'Armenia', 'Dilijan'), uwc('UWC ISAK Japan', 'Japan', 'Karuizawa'),
+  uwc('UWC Changshu China', 'China', 'Changshu'), uwc('UWC Thailand', 'Thailand', 'Phuket'), uwc('UWC East Africa', 'Tanzania', 'Arusha'),
   {
-    n: 'UWC colleges (via UWC Uzbekistan)', co: 'Multiple countries', city: 'IB Diploma, 2 years', url: 'https://uz.uwc.org',
-    scholar: { en: 'Need-based, full or partial. UWC says over 80% of IB Diploma students selected by a national committee receive some financial support.', ru: 'По потребности, полная или частичная. UWC сообщает, что более 80% учащихся IB Diploma, отобранных национальным комитетом, получают финансовую поддержку.', uz: 'Ehtiyojga qarab, to‘liq yoki qisman. UWC ma’lumotiga ko‘ra, milliy qo‘mita tanlagan IB Diploma o‘quvchilarining 80% dan ko‘pi moliyaviy yordam oladi.' },
-    how: { en: 'Apply through the UWC Uzbekistan National Committee. After selection, families go through a financial assessment that sets the scholarship amount.', ru: 'Подавайте заявку через Национальный комитет UWC Узбекистан. После отбора семья проходит финансовую оценку, по ней определяют размер стипендии.', uz: 'UWC O‘zbekiston Milliy qo‘mitasi orqali ariza bering. Tanlovdan keyin oila moliyaviy baholashdan o‘tadi, stipendiya miqdori shu bilan belgilanadi.' },
-  },
-  {
-    n: 'Tashkent International School', co: 'Uzbekistan', city: 'Tashkent', url: 'https://www.tashschool.org',
+    n: 'Tashkent International School', co: 'Uzbekistan', city: 'Tashkent', url: 'https://www.tashschool.org', tier: 'uzbek',
     scholar: { en: 'Grade 10 Host Country National scholarship, running since 1999. The school has offered up to three full scholarships a year.', ru: 'Стипендия для граждан принимающей страны в 10 класс, действует с 1999 года. Школа предлагала до трёх полных стипендий в год.', uz: 'Mezbon davlat fuqarolari uchun 10-sinf stipendiyasi, 1999-yildan beri mavjud. Maktab yiliga uchtagacha to‘liq stipendiya taklif qilgan.' },
     how: { en: 'Open to Uzbek citizens studying in Uzbek national schools. Students can earn a US high school diploma and the IB Diploma. Check the school’s admissions page for the current round.', ru: 'Для граждан Узбекистана из национальных школ. Можно получить американский аттестат и IB Diploma. Текущий набор смотрите на странице приёма школы.', uz: 'O‘zbekiston milliy maktablarida o‘qiyotgan fuqarolar uchun. AQSh maktab diplomi va IB Diplomani olish mumkin. Joriy qabulni maktab sahifasida tekshiring.' },
   },
+  chk('Phillips Exeter Academy', US, 'Exeter', 'www.exeter.edu'), chk('Phillips Academy Andover', US, 'Andover', 'www.andover.edu'), chk('Choate Rosemary Hall', US, 'Wallingford', 'www.choate.edu'),
+  chk('Deerfield Academy', US, 'Deerfield', 'deerfield.edu'), chk('The Lawrenceville School', US, 'Lawrenceville', 'www.lawrenceville.org'), chk('The Hotchkiss School', US, 'Lakeville', 'www.hotchkiss.org'),
+  chk('Taft School', US, 'Watertown', 'www.taftschool.org'), chk('Groton School', US, 'Groton', 'www.groton.org'), chk('St. Paul’s School', US, 'Concord', 'www.sps.edu'),
+  chk('Milton Academy', US, 'Milton', 'www.milton.edu'), chk('Loomis Chaffee', US, 'Windsor', 'www.loomischaffee.org'), chk('Northfield Mount Hermon', US, 'Mount Hermon', 'www.nmhschool.org'),
+  chk('Middlesex School', US, 'Concord', 'www.middlesexschool.org'), chk('Emma Willard School', US, 'Troy', 'www.emmawillard.org'), chk('Peddie School', US, 'Hightstown', 'www.peddie.org'),
+  chk('The Hill School', US, 'Pottstown', 'www.thehill.org'),
+  chk('Blair Academy', US, 'Blairstown', 'www.blair.edu'), chk('Mercersburg Academy', US, 'Mercersburg', 'www.mercersburg.edu'), chk('The Thacher School', US, 'Ojai', 'www.thacher.org'),
+  chk('Cate School', US, 'Carpinteria', 'www.cate.org'), chk('Berkshire School', US, 'Sheffield', 'www.berkshireschool.org'), chk('Salisbury School', US, 'Salisbury', 'www.salisburyschool.org'),
+  chk('The Webb Schools', US, 'Claremont', 'www.webb.org'), chk('Cranbrook Schools', US, 'Bloomfield Hills', 'www.cranbrook.edu'), chk('Kent School', US, 'Kent', 'www.kent-school.edu'),
+  chk('Sevenoaks School', UK, 'Sevenoaks', 'www.sevenoaksschool.org'), chk('Oundle School', UK, 'Oundle', 'www.oundleschool.org.uk'), chk('Harrow School', UK, 'Harrow', 'www.harrowschool.org.uk'),
+  chk('Appleby College', CA, 'Oakville', 'www.appleby.on.ca'), chk('Upper Canada College', CA, 'Toronto', 'www.ucc.on.ca'), chk('Brentwood College School', CA, 'Mill Bay', 'www.brentwood.bc.ca'),
 ];
+
+// Short original practice tests. Answers are indexes into opts.
+export type Q = { q: string; opts: string[]; ans: number };
+export type PTest = { id: string; kind: 'SAT' | 'IELTS'; title: string; mins?: number; passage?: string; questions: Q[] };
+export const SAMPLE_TESTS: PTest[] = [
+  { id: 's-math', kind: 'SAT', title: 'SAT-style Math: 10 warm-up questions', mins: 15, questions: [
+    { q: 'If 3x + 7 = 25, what is the value of x?', opts: ['4', '5', '6', '7'], ans: 2 },
+    { q: 'A line passes through (0, 2) and (4, 10). What is its slope?', opts: ['4', '1', '2', '3'], ans: 2 },
+    { q: 'What is the value of 2^5 − 3^2?', opts: ['21', '25', '23', '27'], ans: 2 },
+    { q: 'If f(x) = 2x² − 3, what is f(3)?', opts: ['12', '18', '21', '15'], ans: 3 },
+    { q: 'What is 20% of 150?', opts: ['30', '20', '25', '35'], ans: 0 },
+    { q: 'What is the sum of the solutions of x² − 5x + 6 = 0?', opts: ['5', '−5', '6', '−6'], ans: 0 },
+    { q: 'A rectangle has a perimeter of 30 and a length of 9. What is its area?', opts: ['45', '60', '81', '54'], ans: 3 },
+    { q: 'If y = 3x and x + y = 20, what is x?', opts: ['5', '4', '10', '15'], ans: 0 },
+    { q: 'The mean of 4, 8, 10 and x is 8. What is x?', opts: ['8', '12', '10', '14'], ans: 2 },
+    { q: 'Which expression is equivalent to (x + 3)²?', opts: ['x² + 9', 'x² + 3x + 9', 'x² + 6x + 9', 'x² + 6x + 6'], ans: 2 },
+  ] },
+  { id: 's-rw', kind: 'SAT', title: 'SAT-style Reading and Writing: 8 questions', mins: 10, questions: [
+    { q: 'The committee’s decision was ______; no member objected to it.', opts: ['controversial', 'unanimous', 'tentative', 'arbitrary'], ans: 1 },
+    { q: 'Neither the teacher nor the students ______ ready for the exam.', opts: ['was', 'is', 'were', 'has been'], ans: 2 },
+    { q: 'The scientist’s results were so ______ that other researchers could not reproduce them.', opts: ['robust', 'erratic', 'reliable', 'consistent'], ans: 1 },
+    { q: 'The library, which opened in 1925 ______ is the oldest building on campus. Which punctuation fits the blank?', opts: [',', ';', ':', '—'], ans: 0 },
+    { q: 'Although she was nervous, Mara delivered the speech with ______.', opts: ['composure', 'hesitation', 'confusion', 'reluctance'], ans: 0 },
+    { q: 'Which revision of “Due to the fact that it rained, the match was cancelled” is the most concise?', opts: ['Because it rained, the match was cancelled.', 'The match was cancelled, due to the fact that rain.', 'Rain fell, therefore cancelling the match.', 'It rained and so the match it was cancelled.'], ans: 0 },
+    { q: 'The senator’s remarks were meant to mollify the angry crowd. “Mollify” most nearly means', opts: ['provoke', 'calm', 'ignore', 'question'], ans: 1 },
+    { q: 'The experiment failed at first. ______, the team revised the method and tried again.', opts: ['However', 'For example', 'Similarly', 'Consequently'], ans: 3 },
+  ] },
+  { id: 'i-read', kind: 'IELTS', title: 'IELTS-style Reading: urban beekeeping', mins: 10,
+    passage: 'Urban beekeeping has grown quickly in many cities over the past fifteen years. Hives are now found on the roofs of offices, hotels and universities. Supporters say bees help pollinate parks and gardens, and city honey is often sold locally. However, some ecologists warn that too many managed hives can compete with wild pollinators for the same flowers. In one study of a large European city, researchers found that areas with the highest number of hives had fewer wild bee species. The authors did not conclude that beekeeping should stop. Instead, they recommended that city councils count existing hives and plant a wider variety of flowering plants before allowing more.',
+    questions: [
+      { q: 'Urban beekeeping has become less common in recent years.', opts: ['True', 'False', 'Not given'], ans: 1 },
+      { q: 'Hives can be found on university buildings.', opts: ['True', 'False', 'Not given'], ans: 0 },
+      { q: 'All ecologists are against urban beekeeping.', opts: ['True', 'False', 'Not given'], ans: 1 },
+      { q: 'Honey from city hives is exported abroad.', opts: ['True', 'False', 'Not given'], ans: 2 },
+      { q: 'The study found fewer wild bee species where there were the most hives.', opts: ['True', 'False', 'Not given'], ans: 0 },
+      { q: 'What did the authors recommend?', opts: ['Banning hives', 'Counting hives and planting more kinds of flowers', 'Moving hives to parks', 'Selling less honey'], ans: 1 },
+      { q: 'What is the writer’s main purpose?', opts: ['To promote honey sales', 'To describe a debate about urban beekeeping', 'To explain how to keep bees', 'To criticise city councils'], ans: 1 },
+    ] },
+  { id: 'i-vocab', kind: 'IELTS', title: 'IELTS-style Academic Vocabulary: 8 words', mins: 6, questions: [
+    { q: '“Mitigate” means', opts: ['make worse', 'make less severe', 'ignore', 'measure'], ans: 1 },
+    { q: '“Ubiquitous” means', opts: ['rare', 'expensive', 'found everywhere', 'ancient'], ans: 2 },
+    { q: '“Substantial” means', opts: ['considerable', 'tiny', 'hidden', 'temporary'], ans: 0 },
+    { q: '“Consequently” means', opts: ['in contrast', 'for example', 'as a result', 'at first'], ans: 2 },
+    { q: '“Reluctant” means', opts: ['eager', 'unwilling', 'certain', 'careful'], ans: 1 },
+    { q: '“Obsolete” means', opts: ['out of date', 'modern', 'popular', 'powerful'], ans: 0 },
+    { q: '“Scarce” means', opts: ['plentiful', 'colourful', 'limited in supply', 'harmful'], ans: 2 },
+    { q: '“Coherent” means', opts: ['noisy', 'logical and clear', 'accidental', 'incomplete'], ans: 1 },
+  ] },
+];
+

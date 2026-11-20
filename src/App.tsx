@@ -2,7 +2,7 @@
 import React,{useState,useMemo,useEffect,useRef} from 'react';
 import ReactDOM from 'react-dom/client';
 import { tr, LANG, setLang as setLang0 } from './i18n';
-import { MAJORS, MAJOR_CATS, GUIDES, SCHOOLS } from './data';
+import { MAJORS, MAJOR_CATS, GUIDES, SCHOOLS, SAMPLE_TESTS } from './data';
 const L3=(o)=>o[LANG]||o.en;
 
 
@@ -178,7 +178,7 @@ function Majors({goMajor}){
   </div>;
 }
 
-function Institutions(){
+function Institutions({uinfo}){
   const [q,setQ]=useState(''),[t,setT]=useState('All'),[sort,setSort]=useState('r'),[co,setCo]=useState(''),[sel,setSel]=useState(null);
   const hit=s=>s.toLowerCase().includes(q.toLowerCase());
   const ul=(t==='School'?[]:INST.filter(i=>(!co||i.co===co)&&hit(`${i.n} ${i.co} ${i.city}`))).sort((a,b)=>sort==='s'?(b.st||0)-(a.st||0):sort==='n'?a.n.localeCompare(b.n):a.r-b.r);
@@ -187,27 +187,33 @@ function Institutions(){
   const Stat=({l,v})=><div className="rounded-xl bg-slate-100 dark:bg-white/5 p-3"><p className="text-xs text-slate-500">{tr(l)}</p><p className="font-semibold">{v}</p></div>;
   const n=x=>x?x.toLocaleString():'—';
   return <div>
-    <Head t="Universities and schools" s="The QS World University Rankings 2027 top 100, and schools with scholarships for Uzbek students."/>
+    <Head t="Universities and schools" s="The QS World University Rankings 2027 top 100, and 50 schools that offer scholarships or aid."/>
     <div className="flex flex-wrap gap-3 mb-6 up"><Tabs v={t} set={setT} opts={[['All','All'],['University','All Universities','cap'],['School','All Schools','book']]}/>
       <div className="relative flex-1 min-w-[200px]"><span className="absolute left-3 top-3 text-slate-400"><I n="search" c="w-4 h-4"/></span><input className={inp+' pl-9'} placeholder={tr('Search by name, country or city…')} value={q} onChange={e=>setQ(e.target.value)}/></div>
       <select className={inp+' !w-auto'} value={co} onChange={e=>setCo(e.target.value)}><option value="">{tr('All countries')}</option>{countries.map(c=><option key={c} value={c}>{tr(c)}</option>)}</select>
       <select className={inp+' !w-auto'} value={sort} onChange={e=>setSort(e.target.value)}><option value="r">{tr('Sort: Ranking')}</option><option value="s">{tr('Sort: Students')}</option><option value="n">{tr('Sort: Name')}</option></select></div>
     {t!=='School'&&<p className="text-xs text-slate-500 mb-4">{tr('Ranks are from QS World University Rankings 2027. Ties share a rank. Full ranking:')} <a className="underline" href="https://www.topuniversities.com/world-university-rankings" target="_blank" rel="noopener noreferrer">topuniversities.com</a></p>}
-    {t!=='University'&&<div className={`${card} p-4 mb-6 text-sm text-slate-600 dark:text-slate-300`}>{tr('We list only schools whose scholarships for Uzbek students we could confirm. Schools in Kazakhstan, Kyrgyzstan and Tajikistan are not on the list yet because we could not verify them.')}</div>}
+    {t!=='University'&&<div className={`${card} p-4 mb-6 text-sm text-slate-600 dark:text-slate-300`}>{tr('Schools marked “Confirmed for Uzbek students” have a scholarship we checked on the school’s own pages. The others are known for offering aid to some international students, so check each school. Schools in Kazakhstan, Kyrgyzstan and Tajikistan are not listed because we could not verify them.')}</div>}
     <div className="grid md:grid-cols-2 gap-5">
-      {sl.map((s,k)=><div key={s.n} onClick={()=>setSel({...s,school:true})} className={`${card} p-5 up cursor-pointer`} style={{animationDelay:`${k*40}ms`}}><Chip c="!bg-violet-100 !text-violet-700 dark:!bg-violet-400/15 dark:!text-violet-300">{tr('Scholarship')}</Chip><h3 className="font-semibold mt-3">{s.n}</h3><p className="text-xs text-slate-500 flex items-center gap-1 mt-1"><I n="pin" c="w-3 h-3"/>{s.city}, {tr(s.co)}</p><p className="text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">{L3(s.scholar)}</p></div>)}
+      {sl.map((s,k)=><div key={s.n} onClick={()=>setSel({...s,school:true})} className={`${card} p-5 up cursor-pointer`} style={{animationDelay:`${k*40}ms`}}><Chip c={s.tier==='uzbek'?'!bg-violet-100 !text-violet-700 dark:!bg-violet-400/15 dark:!text-violet-300':''}>{s.tier==='uzbek'?tr('Confirmed for Uzbek students'):tr('Check aid for international students')}</Chip><h3 className="font-semibold mt-3">{s.n}</h3><p className="text-xs text-slate-500 flex items-center gap-1 mt-1"><I n="pin" c="w-3 h-3"/>{s.city}, {tr(s.co)}</p><p className="text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">{L3(s.scholar)}</p></div>)}
       {ul.map((i,k)=><div key={i.n} onClick={()=>setSel(i)} className={`${card} p-5 flex gap-4 up cursor-pointer`} style={{animationDelay:`${k*20}ms`}}>
         <div className="w-14 h-14 rounded-xl grid place-items-center text-white font-semibold text-sm shrink-0 bg-slate-800 dark:bg-slate-700">#{i.r}</div>
         <div className="min-w-0"><h3 className="font-semibold">{i.n}</h3><p className="text-xs text-slate-500 flex items-center gap-1 mt-1"><I n="pin" c="w-3 h-3"/>{i.city}, {tr(i.co)}</p></div></div>)}
     </div>
     {!ul.length&&!sl.length&&<div className="text-center py-16 text-slate-500">{tr('No institutions found.')}</div>}
-    {sel&&sel.school&&<Modal onClose={()=>setSel(null)}><Chip>{tr('School')}</Chip><h3 className="font-display text-2xl mt-2">{sel.n}</h3><p className="text-sm text-slate-500 flex items-center gap-1"><I n="pin" c="w-3.5 h-3.5"/>{sel.city}, {tr(sel.co)}</p>
+    {sel&&sel.school&&<Modal onClose={()=>setSel(null)}><div className="flex flex-wrap gap-2"><Chip>{tr('School')}</Chip><Chip c={sel.tier==='uzbek'?'!bg-violet-100 !text-violet-700 dark:!bg-violet-400/15 dark:!text-violet-300':''}>{sel.tier==='uzbek'?tr('Confirmed for Uzbek students'):tr('Check aid for international students')}</Chip></div><h3 className="font-display text-2xl mt-2">{sel.n}</h3><p className="text-sm text-slate-500 flex items-center gap-1"><I n="pin" c="w-3.5 h-3.5"/>{sel.city}, {tr(sel.co)}</p>
       <h4 className="font-semibold mt-5">{tr('Scholarship')}</h4><p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{L3(sel.scholar)}</p>
       <h4 className="font-semibold mt-4">{tr('How to apply')}</h4><p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{L3(sel.how)}</p>
       <a href={sel.url} target="_blank" rel="noopener noreferrer" className={ghost+' w-full mt-5'}>{tr('Official website')}<I n="ext" c="w-4 h-4"/></a></Modal>}
     {sel&&!sel.school&&<Modal onClose={()=>setSel(null)}><Chip>{tr('University')}</Chip><h3 className="font-display text-2xl mt-2">{sel.n}</h3><p className="text-sm text-slate-500 flex items-center gap-1"><I n="pin" c="w-3.5 h-3.5"/>{sel.city}, {tr(sel.co)}</p>
       <div className="grid grid-cols-2 gap-3 mt-5"><Stat l="Ranking" v={`#${sel.r} (QS 2027)`}/><Stat l="Students" v={n(sel.st)}/><Stat l="International students" v={n(sel.intl)}/><Stat l="Faculty staff" v={n(sel.fac)}/><Stat l="Studymatch members" v={PEOPLE.filter(p=>p.inst===sel.n).length}/></div>
-      <p className="text-sm text-slate-500 mt-4">{tr('Student and staff numbers are filled in where the QS profile was available. Open the QS profile for admissions, fees and more.')}</p>
+      {(()=>{const u=(uinfo&&uinfo[sel.slug])||{};const has=u.ielts||u.toefl||u.sat||u.gpa||u.deadline||u.scholarship||u.how;return <div className="mt-5"><h4 className="font-semibold">{tr('Admission requirements')}</h4>
+        {has?<><div className="grid grid-cols-2 gap-3 mt-2">{[['IELTS',u.ielts],['TOEFL',u.toefl],['SAT / ACT',u.sat],['GPA',u.gpa],['Application deadline',u.deadline]].map(([l,v])=><Stat key={l} l={l} v={v||'—'}/>)}</div>
+          {u.scholarship&&<><h4 className="font-semibold mt-4">{tr('Scholarships')}</h4><p className="text-sm text-slate-600 dark:text-slate-300 mt-1 whitespace-pre-line">{u.scholarship}</p></>}
+          {u.how&&<><h4 className="font-semibold mt-4">{tr('How to apply')}</h4><p className="text-sm text-slate-600 dark:text-slate-300 mt-1 whitespace-pre-line">{u.how}</p></>}</>
+        :<p className="text-sm text-slate-500 mt-2">{tr('Admission details have not been added for this university yet. Open the QS profile or the official admissions page.')}</p>}
+        {u.url&&<a href={u.url} target="_blank" rel="noopener noreferrer" className={ghost+' w-full mt-4'}>{tr('Official admissions page')}<I n="ext" c="w-4 h-4"/></a>}</div>})()}
+      <p className="text-xs text-slate-500 mt-4">{tr('Student and staff numbers are filled in where the QS profile was available. Open the QS profile for admissions, fees and more.')}</p>
       <a href={sel.slug?`https://www.topuniversities.com/universities/${sel.slug}`:'https://www.topuniversities.com/world-university-rankings'} target="_blank" rel="noopener noreferrer" className={ghost+' w-full mt-5'}>{tr('View full profile on QS')}<I n="ext" c="w-4 h-4"/></a></Modal>}
   </div>;
 }
@@ -217,7 +223,7 @@ function Guides(){
   const list=GUIDES.filter(g=>g.cat===c);
   return <div>
     <Head t="Guides" s="Exam prep and study-abroad notes for students in Uzbekistan. Links go to official sources."/>
-    <div className="mb-6 up"><Tabs v={c} set={setC} opts={[['IELTS','IELTS'],['SAT','SAT'],['Abroad','Studied abroad'],['Scholarships','Scholarships']]}/></div>
+    <div className="mb-6 up"><Tabs v={c} set={setC} opts={[['IELTS','IELTS'],['SAT','SAT'],['Abroad','Studied abroad'],['Scholarships','Scholarships'],['Resources','Free resources']]}/></div>
     <div className="grid lg:grid-cols-2 gap-5">{list.map(g=><div key={g.id} className={`${card} p-6 up`}><h3 className="font-display text-xl">{L3(g.title)}</h3><p className="text-slate-600 dark:text-slate-300 mt-2 text-sm">{L3(g.sum)}</p>
       <ul className="mt-4 space-y-2.5 text-sm list-disc pl-5 marker:text-violet-600">{(g.pts[LANG]||g.pts.en).map((x,i)=><li key={i}>{x}</li>)}</ul>
       <div className="flex flex-wrap gap-2 mt-5">{g.links.map(k=><a key={k.u} href={k.u} target="_blank" rel="noopener noreferrer" className={ghost+' !py-2 !px-3 text-xs'}>{k.l}<I n="ext" c="w-3.5 h-3.5"/></a>)}</div></div>)}</div>
@@ -278,7 +284,7 @@ function Essays({db,myId,me,flash,send}){
       {(()=>{const h=!f.t?tr('Add a title.'):(!f.body&&!files.length)?tr('Upload an image or write the essay text.'):!f.ok?tr('Tick the checkbox above to confirm you have the rights.'):'';return h&&<p className="text-xs text-amber-600 dark:text-amber-400">{h}</p>})()}{err&&<p className="text-xs text-red-500">{err}</p>}<button className={prim+' w-full'} disabled={!f.t||(!f.body&&!files.length)||!f.ok||busy} onClick={save}>{busy?tr('Publishing…'):tr('Publish')}</button></div></Modal>}
   </div>;
 }
-function Materials(p){const [m,setM]=useState('guides');return <div><div className="mb-6"><Tabs v={m} set={setM} opts={[['guides','Guides','cap'],['files','Files','file'],['essays','Essays','book']]}/></div>{m==='guides'?<Guides/>:m==='files'?<Files {...p}/>:<Essays {...p}/>}</div>}
+function Materials(p){const [m,setM]=useState('guides');return <div><div className="mb-6"><Tabs v={m} set={setM} opts={[['guides','Guides','cap'],['practice','Practice','file'],['files','Files','file'],['essays','Essays','book']]}/></div>{m==='guides'?<Guides/>:m==='practice'?<Practice tests={p.tests||[]}/>:m==='files'?<Files {...p}/>:<Essays {...p}/>}</div>}
 
 function Messages({conn,active,setActive,msgs,send,myId,saved,saveItem,delSaved,flash,startCall}){
   const [txt,setTxt]=useState(''),[busy,setBusy]=useState(false),[view,setView]=useState(null),[recOn,setRecOn]=useState(false),[sec,setSec]=useState(0),end=useRef(),mrRef=useRef(),chunks=useRef([]),cancel=useRef(false),t0=useRef(0),tm=useRef();
@@ -432,10 +438,125 @@ function CallLayer({rt,myId,meName,cmd,flash}){
     </div></div>;
 }
 
+function Practice({tests}){
+  const [kind,setKind]=useState('SAT'),[run,setRun]=useState(null),[ans,setAns]=useState({}),[done,setDone]=useState(false),[left,setLeft]=useState(0);
+  const list=[...SAMPLE_TESTS,...tests].filter(t=>t.kind===kind);
+  const start=t=>{setRun(t);setAns({});setDone(false);setLeft((t.mins||0)*60);window.scrollTo(0,0)};
+  useEffect(()=>{if(!run||done||!run.mins)return;const id=setInterval(()=>setLeft(x=>{if(x<=1){setDone(true);return 0}return x-1}),1000);return()=>clearInterval(id)},[run,done]);
+  const fmt=n=>`${Math.floor(n/60)}:${String(n%60).padStart(2,'0')}`;
+  if(run){const n=run.questions.length,score=run.questions.filter((q,i)=>ans[i]===q.ans).length;
+    return <div className="max-w-3xl">
+      <div className="flex items-center justify-between mb-5"><button className={ghost+' !py-2'} onClick={()=>setRun(null)}>← {tr('Back to tests')}</button>{run.mins>0&&!done&&<span className="font-semibold tabular-nums">{tr('Time left')}: {fmt(left)}</span>}</div>
+      <h2 className="text-2xl mb-4">{run.title}</h2>
+      {done&&<div className={`${card} p-5 mb-6`}><p className="text-sm text-slate-500">{tr('Your score')}</p><p className="font-display text-4xl">{score}/{n} <span className="text-lg text-slate-500">({Math.round(score/n*100)}%)</span></p></div>}
+      {run.passage&&<div className={`${card} p-5 mb-6 whitespace-pre-line text-sm leading-relaxed`}>{run.passage}</div>}
+      <div className="space-y-5">{run.questions.map((q,i)=><div key={i} className={`${card} p-5`}>
+        <p className="font-medium mb-3">{i+1}. {q.q}</p>
+        <div className="space-y-2">{q.opts.map((o,j)=>{const picked=ans[i]===j,right=q.ans===j;
+          const cls=done?(right?'border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10':picked?'border-red-400 bg-red-50 dark:bg-red-500/10':'border-slate-200 dark:border-white/10'):(picked?'border-violet-600 bg-violet-50 dark:bg-violet-500/10':'border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5');
+          return <label key={j} className={`flex gap-3 items-start rounded-xl border p-3 text-sm cursor-pointer ${cls}`}><input type="radio" className="mt-1 accent-violet-600" name={'q'+i} checked={picked} disabled={done} onChange={()=>setAns({...ans,[i]:j})}/><span><b className="mr-1">{'ABCD'[j]}.</b>{o}</span></label>})}</div>
+        {done&&ans[i]!==q.ans&&<p className="text-xs text-slate-500 mt-3">{tr('Correct answer')}: {'ABCD'[q.ans]}. {q.opts[q.ans]}</p>}
+      </div>)}</div>
+      {!done?<button className={prim+' mt-6'} onClick={()=>setDone(true)}>{tr('Finish and see score')}</button>:<button className={ghost+' mt-6'} onClick={()=>start(run)}>{tr('Try again')}</button>}
+    </div>}
+  return <div>
+    <Head t="Practice tests" s="Short sets you can take right here. Answers are checked instantly."/>
+    <div className="mb-6 up"><Tabs v={kind} set={setKind} opts={[['SAT','SAT'],['IELTS','IELTS']]}/></div>
+    {!list.length&&<p className="text-slate-500 py-10 text-center">{tr('No tests here yet.')}</p>}
+    <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">{list.map((t,i)=><div key={t.id} className={`${card} p-5 flex flex-col up`} style={{animationDelay:`${i*40}ms`}}>
+      <Chip>{t.kind}</Chip><h3 className="font-semibold mt-3 leading-snug">{t.title}</h3><p className="text-xs text-slate-500 mt-1">{t.questions.length} {tr('questions')}{t.mins?` · ${t.mins} ${tr('min')}`:''}</p>
+      <button className={prim+' mt-auto !py-2 w-full mt-4'} onClick={()=>start(t)}>{tr('Start test')}</button></div>)}</div>
+  </div>;
+}
+
+function parseTest(raw){
+  const lines=raw.replace(/\r/g,'').split('\n').map(l=>l.trim()).filter(Boolean);
+  const qs=[],pass=[],key={};let cur=null,keyMode=false;
+  for(const l of lines){
+    if(/^(answer key|answers)\s*:?\s*$/i.test(l)){keyMode=true;continue}
+    if(keyMode){for(const m of l.matchAll(/(\d{1,3})\s*[.):\-]?\s*\(?([A-D])\b/g))key[+m[1]]='ABCD'.indexOf(m[2]);continue}
+    let m;
+    if((m=l.match(/^(\d{1,3})[.)]\s+(.*)/))){cur={n:+m[1],q:m[2],opts:[],ans:-1};qs.push(cur);continue}
+    if(cur&&(m=l.match(/^answer\s*[:\-]\s*\(?([A-D])/i))){cur.ans='ABCD'.indexOf(m[1].toUpperCase());continue}
+    if(cur&&(m=l.match(/^\(?([A-D])[.)]\s*(.*)/))){cur.opts.push(m[2]);continue}
+    if(cur){if(cur.opts.length)cur.opts[cur.opts.length-1]+=' '+l;else cur.q+=' '+l}else pass.push(l);
+  }
+  qs.forEach(q=>{if(key[q.n]!=null)q.ans=key[q.n]});
+  return {passage:pass.join('\n'),questions:qs.filter(q=>q.opts.length>=2).map(({q,opts,ans})=>({q,opts,ans}))};
+}
+async function pdfText(file){
+  const pdfjs=await import('pdfjs-dist');
+  const w=await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
+  pdfjs.GlobalWorkerOptions.workerSrc=w.default;
+  const doc=await pdfjs.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+  let out='';
+  for(let p=1;p<=doc.numPages;p++){const pg=await doc.getPage(p),c=await pg.getTextContent();let y=null,line='';
+    for(const it of c.items){const yy=Math.round(it.transform[5]);if(y!==null&&Math.abs(yy-y)>3){out+=line.trim()+'\n';line=''}y=yy;line+=it.str+' '}
+    out+=line.trim()+'\n'}
+  return out;
+}
+
+function TestBuilder({db,onDone}){
+  const [f,setF]=useState({kind:'IELTS',title:'',mins:20,passage:''}),[raw,setRaw]=useState(''),[qs,setQs]=useState([]),[busy,setBusy]=useState(false),[note,setNote]=useState('');
+  const run=txt=>{const r=parseTest(txt);setQs(r.questions);setF(v=>({...v,passage:r.passage}));setNote(r.questions.length?`Found ${r.questions.length} questions. Check each one, set the correct answer, then publish.`:'No questions found. Questions must be numbered (1. 2. 3.) with options A. B. C. D.')};
+  const onPdf=async e=>{const file=e.target.files[0];if(!file)return;setBusy(true);setNote('Reading PDF…');try{const t=await pdfText(file);setRaw(t);if(!f.title)setF(v=>({...v,title:file.name.replace(/\.pdf$/i,'')}));run(t);if(!t.trim())setNote('No text found. Scanned PDFs (images) cannot be read automatically.')}catch(x){setNote('Could not read this PDF: '+(x.message||x))}setBusy(false);e.target.value=''};
+  const setQ=(i,p)=>setQs(qs.map((q,k)=>k===i?{...q,...p}:q));
+  const publish=async()=>{setBusy(true);try{await db.collection('tests').add({kind:f.kind,title:f.title,mins:+f.mins||0,passage:f.passage,questions:qs.filter(q=>q.q.trim()&&q.opts.length>=2&&q.ans>=0),ts:Date.now()});onDone()}catch(x){setNote('Could not publish: '+(x.message||x))}setBusy(false)};
+  const valid=f.title.trim()&&qs.some(q=>q.ans>=0);
+  return <div className="space-y-4">
+    <div className="grid sm:grid-cols-3 gap-3"><select className={inp} value={f.kind} onChange={e=>setF({...f,kind:e.target.value})}><option>IELTS</option><option>SAT</option></select><input className={inp} placeholder="Test title" value={f.title} onChange={e=>setF({...f,title:e.target.value})}/><input type="number" className={inp} placeholder="Minutes (0 = no timer)" value={f.mins} onChange={e=>setF({...f,mins:e.target.value})}/></div>
+    <div className="rounded-xl border-2 border-dashed border-slate-300 dark:border-white/15 p-5 text-sm"><label className="cursor-pointer underline">Upload a PDF<input type="file" accept="application/pdf" className="hidden" onChange={onPdf}/></label> or paste the text below. Format: numbered questions (1. 2. …), options A. B. C. D., and either “Answer: B” after a question or an “Answer Key” list at the end.<p className="text-xs text-slate-500 mt-2">Only upload material you created or have the right to share.</p></div>
+    <textarea rows="8" className={inp+' font-mono text-xs'} placeholder="Paste test text here" value={raw} onChange={e=>setRaw(e.target.value)}/>
+    <div className="flex gap-2 items-center"><button className={ghost} onClick={()=>run(raw)} disabled={!raw.trim()}>Parse text</button>{note&&<span className="text-xs text-slate-500">{note}</span>}</div>
+    {f.passage&&<textarea rows="5" className={inp+' text-sm'} value={f.passage} onChange={e=>setF({...f,passage:e.target.value})} placeholder="Passage (optional)"/>}
+    {qs.map((q,i)=><div key={i} className={`${card} p-4 space-y-2`}><div className="flex gap-2"><textarea rows="2" className={inp+' text-sm'} value={q.q} onChange={e=>setQ(i,{q:e.target.value})}/><button className="text-slate-400 hover:text-red-500" onClick={()=>setQs(qs.filter((_,k)=>k!==i))}><I n="trash" c="w-4 h-4"/></button></div>
+      {q.opts.map((o,j)=><div key={j} className="flex items-center gap-2"><b className="w-5 text-sm">{'ABCD'[j]}</b><input className={inp+' !py-1.5 text-sm'} value={o} onChange={e=>setQ(i,{opts:q.opts.map((x,k)=>k===j?e.target.value:x)})}/></div>)}
+      <label className="text-xs text-slate-500">Correct answer <select className={inp+' !w-auto inline-block ml-2 !py-1'} value={q.ans} onChange={e=>setQ(i,{ans:+e.target.value})}><option value="-1">— choose —</option>{q.opts.map((_,j)=><option key={j} value={j}>{'ABCD'[j]}</option>)}</select></label></div>)}
+    <button className={prim} disabled={!valid||busy} onClick={publish}>{busy?'Working…':'Publish test'}</button>
+  </div>;
+}
+
+const ARow=({children,onDel})=><div className="flex items-center gap-3 py-2.5 border-b border-slate-200 dark:border-white/10 text-sm"><div className="min-w-0 flex-1">{children}</div>{onDel}</div>;
+const AdminShell=({children,ok,onExit,out})=><div className="min-h-screen max-w-4xl mx-auto px-4 py-8"><div className="flex items-center justify-between mb-6"><h1 className="text-2xl">Studymatch admin</h1><div className="flex gap-2"><button className={ghost+' !py-2'} onClick={()=>{location.hash='';onExit()}}>← Back to site</button>{ok&&<button className={ghost+' !py-2'} onClick={out}>Sign out</button>}</div></div>{children}</div>;
+function Admin({db,people,mats,ess,tests,uinfo,onExit}){
+  const [ok,setOk]=useState(null),[em,setEm]=useState(''),[pw,setPw]=useState(''),[err,setErr]=useState(''),[sec,setSec]=useState('members'),[bans,setBans]=useState([]),[uni,setUni]=useState(INST[0].slug),[form,setForm]=useState({}),[saved,setSaved]=useState(''),[building,setBuilding]=useState(false);
+  const api=useRef(null);
+  useEffect(()=>{(async()=>{try{api.current=await claude.use('admin');setOk(api.current?await api.current.isAdmin():false)}catch(e){setOk(false)}})()},[]);
+  useEffect(()=>{if(ok&&sec==='members')api.current.bans().then(setBans).catch(()=>{})},[ok,sec]);
+  useEffect(()=>{setForm(uinfo[uni]||{});setSaved('')},[uni,uinfo]);
+  const login=async()=>{setErr('');try{await api.current.signIn(em,pw);location.reload()}catch(e){setErr(e.message||'Sign-in failed')}};
+  const out=async()=>{try{await api.current.signOut()}catch(e){}location.hash='';location.reload()};
+  const del=async(col,id)=>{if(!confirm('Delete this?'))return;try{await db.collection(col).doc(id).delete()}catch(e){alert('Failed: '+(e.message||e))}};
+  const ban=async p=>{if(!confirm(`Ban ${p.name} and remove everything they posted?`))return;try{await api.current.ban(p.id);api.current.bans().then(setBans)}catch(e){alert('Failed: '+(e.message||e))}};
+  const unban=async id=>{try{await api.current.unban(id);api.current.bans().then(setBans)}catch(e){alert('Failed: '+(e.message||e))}};
+  const saveUni=async()=>{try{await db.collection('uni_info').doc(uni).set(form);setSaved('Saved')}catch(e){setSaved('Failed: '+(e.message||e))}};
+  if(ok===null)return <AdminShell ok={ok} onExit={onExit} out={out}><p className="text-slate-500">Loading…</p></AdminShell>;
+  if(!ok)return <AdminShell ok={ok} onExit={onExit} out={out}><div className={`${card} p-6 max-w-sm`}><h2 className="text-xl mb-4">Admin sign-in</h2>
+    {!api.current?<p className="text-sm text-slate-500">Admin works only with the online version (Supabase).</p>:<div className="space-y-3"><input className={inp} type="email" placeholder="Email" value={em} onChange={e=>setEm(e.target.value)}/><input className={inp} type="password" placeholder="Password" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&login()}/>{err&&<p className="text-xs text-red-500">{err}</p>}<button className={prim+' w-full'} onClick={login}>Sign in</button><p className="text-xs text-slate-500">Only accounts listed as admins can use this page.</p></div>}</div></AdminShell>;
+  const U=INST.find(i=>i.slug===uni)||INST[0];
+  const fld=(k,l,ph)=><label className="block text-sm font-medium">{l}<input className={inp+' mt-1.5'} placeholder={ph} value={form[k]||''} onChange={e=>setForm({...form,[k]:e.target.value})}/></label>;
+  return <AdminShell ok={ok} onExit={onExit} out={out}>
+    <div className="mb-6"><Tabs v={sec} set={setSec} opts={[['members','Members'],['materials','Files'],['essays','Essays'],['tests','Tests'],['unis','Universities']]}/></div>
+    {sec==='members'&&<div><p className="text-sm text-slate-500 mb-3">{people.length} members. “Delete” removes the profile only. “Ban” removes everything the person posted and blocks new posts.</p>
+      {people.map(p=><ARow key={p.id} onDel={<div className="flex gap-2"><button className={ghost+' !py-1.5 !px-3 text-xs'} onClick={()=>del('members',p.id)}>Delete</button><button className="rounded-xl px-3 py-1.5 text-xs font-semibold bg-red-600 text-white" onClick={()=>ban(p)}>Ban</button></div>}><b>{p.name}</b> <span className="text-slate-500">· {p.major} · {p.inst} · {p.age}</span><div className="text-[10px] text-slate-400">{p.id}</div></ARow>)}
+      {bans.length>0&&<><h3 className="font-semibold mt-6 mb-2">Banned</h3>{bans.map(b=><ARow key={b.user_id} onDel={<button className={ghost+' !py-1.5 !px-3 text-xs'} onClick={()=>unban(b.user_id)}>Unban</button>}><span className="text-xs">{b.user_id}</span></ARow>)}</>}</div>}
+    {sec==='materials'&&<div>{!mats.length&&<p className="text-slate-500">No files.</p>}{mats.map(m=><ARow key={m.id} onDel={<button className={ghost+' !py-1.5 !px-3 text-xs'} onClick={()=>del('materials',m.id)}>Delete</button>}><b>{m.t}</b> <span className="text-slate-500">· {m.k} · {m.s} · by {m.a}</span></ARow>)}</div>}
+    {sec==='essays'&&<div>{!ess.length&&<p className="text-slate-500">No essays.</p>}{ess.map(m=><ARow key={m.id} onDel={<button className={ghost+' !py-1.5 !px-3 text-xs'} onClick={()=>del('essays',m.id)}>Delete</button>}><b>{m.t}</b> <span className="text-slate-500">· {m.sec} · by {m.a}</span></ARow>)}</div>}
+    {sec==='tests'&&<div>{building?<><button className={ghost+' !py-2 mb-4'} onClick={()=>setBuilding(false)}>← Back</button><TestBuilder db={db} onDone={()=>setBuilding(false)}/></>:<><button className={prim+' mb-4'} onClick={()=>setBuilding(true)}><I n="plus" c="w-4 h-4"/>New test (PDF or text)</button>
+      {!tests.length&&<p className="text-slate-500">No custom tests yet.</p>}{tests.map(t=><ARow key={t.id} onDel={<button className={ghost+' !py-1.5 !px-3 text-xs'} onClick={()=>del('tests',t.id)}>Delete</button>}><b>{t.title}</b> <span className="text-slate-500">· {t.kind} · {t.questions.length} questions</span></ARow>)}</>}</div>}
+    {sec==='unis'&&<div className="space-y-4"><select className={inp} value={uni} onChange={e=>setUni(e.target.value)}>{INST.map(i=><option key={i.slug} value={i.slug}>#{i.r} {i.n}</option>)}</select>
+      <p className="text-sm text-slate-500">Details shown to students for <b>{U.n}</b>. Leave a field empty to show a dash.</p>
+      <div className="grid sm:grid-cols-2 gap-3">{fld('ielts','IELTS','e.g. 7.0 overall, no band below 6.5')}{fld('toefl','TOEFL','e.g. 100')}{fld('sat','SAT / ACT','e.g. SAT required, middle 50%: 1500–1570')}{fld('gpa','GPA','e.g. 3.9+ / top of class')}{fld('deadline','Application deadline','e.g. 1 Jan (Regular)')}{fld('url','Official admissions link','https://…')}</div>
+      <label className="block text-sm font-medium">Scholarships<textarea rows="3" className={inp+' mt-1.5'} value={form.scholarship||''} onChange={e=>setForm({...form,scholarship:e.target.value})}/></label>
+      <label className="block text-sm font-medium">How to apply<textarea rows="4" className={inp+' mt-1.5'} value={form.how||''} onChange={e=>setForm({...form,how:e.target.value})}/></label>
+      <div className="flex items-center gap-3"><button className={prim} onClick={saveUni}>Save</button>{saved&&<span className="text-sm text-slate-500">{saved}</span>}</div></div>}
+  </AdminShell>;
+}
+
 const Mark=()=><span className="font-display text-xl tracking-tight">Study<span className="text-violet-600">match</span></span>;
 const LangSwitch=({lang,set})=><div className="flex text-xs font-semibold border border-slate-200 dark:border-white/15 rounded-lg overflow-hidden">{['en','ru','uz'].map(l=><button key={l} onClick={()=>set(l)} className={`px-2.5 py-1.5 uppercase transition ${lang===l?'bg-slate-900 text-white dark:bg-white dark:text-slate-900':'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10'}`}>{l}</button>)}</div>;
 
-function Landing({onEnter,dark,setDark,lang,setLang}){
+function Landing({onEnter,onAdmin,dark,setDark,lang,setLang}){
   const F=[['People','Filter by major, age, school and skills. Send a request, then chat or call inside the site.'],['Universities','The QS World University Rankings 2027 top 100, with country, city and a link to each QS profile.'],['Schools with scholarships','Schools that have offered scholarships to Uzbek students, and how to apply.'],['Guides and files','IELTS and SAT notes, what a foreign degree means in Uzbekistan, scholarships, and files students share.'],['Calendar','Deadlines and study sessions with friends in one place.'],['Essays','Read essays with reviews, or post your own.']];
   const Q=[['Who is it for?','Students in schools and universities who want a study partner, a co-founder, or just clearer information about studying abroad.'],['How do I join?','Open the invite link, make a profile, and you show up for other members.'],['Is the university data official?','Ranks and names come from the QS World University Rankings 2027. Each university links to its own QS page for details.']];
   const go=t=>()=>{window.scrollTo(0,0);onEnter(t)};
@@ -450,7 +571,7 @@ function Landing({onEnter,dark,setDark,lang,setLang}){
       <div className="grid sm:grid-cols-2 gap-x-12 gap-y-8">{F.map(([t,d],i)=><div key={t} className="flex gap-4"><span className="font-display text-violet-600 text-xl w-6">{i+1}</span><div><h3 className="font-semibold">{tr(t)}</h3><p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{tr(d)}</p></div></div>)}</div></section>
     <section className="max-w-5xl mx-auto px-5 py-16 border-b border-slate-200 dark:border-white/10 grid md:grid-cols-[1fr_2fr] gap-8"><h2 className="text-3xl">{tr('Why it exists')}</h2><p className="text-slate-600 dark:text-slate-300 text-lg">{tr('Information about studying abroad is scattered across channels, PDFs and chat threads. Studymatch puts the useful parts in one place, in Uzbek, Russian and English.')}</p></section>
     <section className="max-w-5xl mx-auto px-5 py-16"><h2 className="text-3xl mb-8">{tr('Questions')}</h2><div className="divide-y divide-slate-200 dark:divide-white/10 border-y border-slate-200 dark:border-white/10">{Q.map(([q,a])=><details key={q} className="py-4 group"><summary className="cursor-pointer list-none flex justify-between font-medium">{tr(q)}<span className="text-violet-600 group-open:rotate-45 transition-transform"><I n="plus" c="w-4 h-4"/></span></summary><p className="text-sm text-slate-600 dark:text-slate-300 mt-3 max-w-2xl">{tr(a)}</p></details>)}</div>
-      <div className="mt-12 flex flex-wrap items-center justify-between gap-4"><p className="text-xs text-slate-500">Studymatch · {tr('University ranks')}: QS World University Rankings 2027</p><button onClick={go('profile')} className={prim}>{tr('Create a profile')}</button></div></section>
+      <div className="mt-12 flex flex-wrap items-center justify-between gap-4"><p className="text-xs text-slate-500">Studymatch · {tr('University ranks')}: QS World University Rankings 2027</p><button onClick={go('profile')} className={prim}>{tr('Create a profile')}</button></div><div className="text-center mt-10"><button onClick={onAdmin} className="text-[10px] text-slate-400/50 hover:text-slate-500">admin</button></div></section>
   </div>;
 }
 
@@ -473,14 +594,14 @@ function App(){
   const [lang,setLangS]=useState(LANG),[dark,setDark]=useState(()=>matchMedia('(prefers-color-scheme: dark)').matches),[tab,setTab]=useState(()=>location.hash==='#join'?'profile':'discover');
   const [me,setMe]=useState({name:'',age:'',major:'',inst:'',skills:'',goal:'',mode:'both',type:'University'}),[joined,setJoined]=useState(false);
   const [db,setDb]=useState(null),[rt,setRt]=useState(null),[myId,setMyId]=useState('local'),[people,setPeople]=useState([]),[all,setAll]=useState([]),[priv,setPriv]=useState([]),[reqs,setReqs]=useState([]),[sess,setSess]=useState([]),[mats,setMats]=useState([]),[ess,setEss]=useState([]);
-  const [landing,setLanding]=useState(true),[active,setActive]=useState(null),[inv,setInv]=useState(false),[toast,setToast]=useState(''),[cmd,setCmd]=useState(null),[nOpen,setNOpen]=useState(false),[seen,setSeen]=useState(0),[mf,setMf]=useState('');
+  const [tests,setTests]=useState([]),[uinfoArr,setUinfoArr]=useState([]),[admin,setAdmin]=useState(()=>location.hash==='#admin'),[landing,setLanding]=useState(true),[active,setActive]=useState(null),[inv,setInv]=useState(false),[toast,setToast]=useState(''),[cmd,setCmd]=useState(null),[nOpen,setNOpen]=useState(false),[seen,setSeen]=useState(0),[mf,setMf]=useState('');
   PEOPLE=people;
   const setLang=l=>{setLang0(l);setLangS(l)};
   useEffect(()=>{document.documentElement.classList.toggle('dark',dark);document.documentElement.lang=lang},[dark,lang]);
   useEffect(()=>{let off=[];(async()=>{try{if(!window.claude)return;const u=await claude.use('user'),d=await claude.use('db');const id=u?await u.id():'local';setMyId(id);if(!d)return;setDb(d);try{setRt(await claude.use('rt'))}catch(e){}
     const sub=(p,f)=>off.push(d.collection(p).onSnapshot(s=>f(s.docs.map(x=>({id:x.id,...x.data()})))));
     sub('members',a=>{setPeople(a.filter(p=>p.id!==id));const mine=a.find(p=>p.id===id);if(mine){setMe(m=>({...m,...mine,skills:(mine.skills||[]).join(', ')}));setJoined(true)}});
-    sub('msgs',setAll);sub('data/users/'+id,setPriv);sub('requests',setReqs);sub('sessions',setSess);sub('materials',setMats);sub('essays',setEss);}catch(e){}})();return()=>off.forEach(f=>typeof f==='function'&&f())},[]);
+    sub('msgs',setAll);sub('data/users/'+id,setPriv);sub('requests',setReqs);sub('sessions',setSess);sub('materials',setMats);sub('essays',setEss);sub('tests',setTests);sub('uni_info',setUinfoArr);}catch(e){}})();return()=>off.forEach(f=>typeof f==='function'&&f())},[]);
   useEffect(()=>{try{setSeen(+localStorage.getItem('sm-seen-'+myId)||0)}catch(e){}},[myId]);
   const flash=t=>{setToast(t);setTimeout(()=>setToast(''),3200)};
   const need=()=>{flash(tr('Open the shared link while signed in to join the community.'));return false};
@@ -499,9 +620,9 @@ function App(){
   const sent=new Set(reqs.filter(r=>r.status==='pending'&&r.from===myId).map(r=>r.to));
   const received=new Map(reqs.filter(r=>r.status==='pending'&&r.to===myId).map(r=>[r.from,r]));
   const connect=id=>{if(!db)return need();if(sent.has(id)||friends.has(id))return;db.collection('requests').add({from:myId,to:id,status:'pending',ts:Date.now()}).then(()=>flash(tr('Request sent'))).catch(()=>flash(tr('Could not send request.')))};
-  const answerReq=(r,st)=>db.collection('requests').doc(r.id).set({from:r.from,to:r.to,status:st,ts:r.ts,ats:Date.now()}).catch(()=>flash(tr('Could not update.')));
+  const answerReq=(r,st)=>db.collection('requests').doc(r.id).update({from:r.from,to:r.to,status:st,ts:r.ts,ats:Date.now()}).catch(()=>flash(tr('Could not update.')));
   const book=o=>db.collection('sessions').add({from:myId,to:o.to,title:o.title,date:o.date,time:o.time,status:'pending',ts:Date.now()}).then(()=>flash(tr('Invitation sent'))).catch(()=>flash(tr('Could not send.')));
-  const answerSess=(s,st)=>db.collection('sessions').doc(s.id).set({from:s.from,to:s.to,title:s.title,date:s.date,time:s.time,status:st,ts:s.ts,ats:Date.now()}).catch(()=>flash(tr('Could not update.')));
+  const answerSess=(s,st)=>db.collection('sessions').doc(s.id).update({from:s.from,to:s.to,title:s.title,date:s.date,time:s.time,status:st,ts:s.ts,ats:Date.now()}).catch(()=>flash(tr('Could not update.')));
   const cancelSess=s=>db.collection('sessions').doc(s.id).delete().catch(()=>flash(tr('Could not delete.')));
   const openChat=id=>{setActive(id);setTab('messages')};
   const startCall=(peer,video)=>setCmd({peer,video,n:Date.now()});
@@ -525,8 +646,11 @@ function App(){
   const goN=n=>{setNOpen(false);markSeen();if(n.type==='msg'||n.type==='accepted')openChat(n.from);else if(n.type==='upload')setTab('materials');else setTab('calendar')};
   const askDesktop=()=>{try{Notification.requestPermission().then(()=>setNOpen(o=>o))}catch(e){}};
   const copy=()=>{try{navigator.clipboard.writeText(LINK).then(()=>flash(tr('Link copied')),()=>flash(tr('Select the link and copy it')))}catch(e){flash(tr('Select the link and copy it'))}};
+  const uinfo=Object.fromEntries(uinfoArr.map(x=>[x.id,x]));
+  const goAdmin=()=>{location.hash='admin';setAdmin(true)};
   const nav=[['discover','Discover','users'],['majors','Majors','cap'],['institutions','Institutions','building'],['materials','Materials','book'],['calendar','Calendar','calendar'],['messages','Messages','msg'],['profile','Profile','user']];
-  if(landing)return <Landing dark={dark} setDark={setDark} lang={lang} setLang={setLang} onEnter={t=>{setTab(t);setLanding(false)}}/>;
+  if(admin)return <Admin db={db} people={people} mats={mats} ess={ess} tests={tests} uinfo={uinfo} onExit={()=>setAdmin(false)}/>;
+  if(landing)return <Landing onAdmin={goAdmin} dark={dark} setDark={setDark} lang={lang} setLang={setLang} onEnter={t=>{setTab(t);setLanding(false)}}/>;
   return <div className="min-h-screen" onClick={()=>nOpen&&togglePanel()}>
     <header style={{top:'env(safe-area-inset-top,0px)'}} className="sticky z-40 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur border-b border-slate-200 dark:border-white/10"><div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
       <div onClick={()=>setLanding(true)} className="cursor-pointer" title={tr('About Studymatch')}><Mark/></div>
@@ -540,12 +664,13 @@ function App(){
       {!joined&&tab!=='profile'&&<div className="mb-6 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 bg-violet-100 dark:bg-violet-500/15 text-violet-900 dark:text-violet-200 text-sm up"><span>{tr('Create your profile to appear in Discover and start chatting.')}</span><button className={prim+' !py-2'} onClick={()=>setTab('profile')}>{tr('Create profile')}</button></div>}
       {tab==='discover'&&<Discover myId={myId} friends={friends} sent={sent} received={received} connect={connect} accept={answerReq} openChat={openChat} invite={()=>setInv(true)} initMajor={mf}/>}
       {tab==='majors'&&<Majors goMajor={m=>{setMf(m);setTab('discover')}}/>}
-      {tab==='institutions'&&<Institutions/>}
-      {tab==='materials'&&<Materials db={db} myId={myId} me={me} flash={flash} send={send}/>}
+      {tab==='institutions'&&<Institutions uinfo={uinfo}/>}
+      {tab==='materials'&&<Materials db={db} myId={myId} me={me} flash={flash} send={send} tests={tests}/>}
       {tab==='calendar'&&<Calendar myId={myId} friends={friends} deadlines={deadlines} sessions={sess} addDeadline={addDeadline} toggleDeadline={toggleDeadline} delDeadline={delDeadline} book={book} answer={answerSess} cancel={cancelSess} call={startCall}/>}
       {tab==='messages'&&<Messages conn={friends} active={active} setActive={setActive} msgs={all} send={send} myId={myId} saved={saved} saveItem={saveItem} delSaved={delSaved} flash={flash} startCall={startCall}/>}
       {tab==='profile'&&<><Head t={joined?'Your profile':'Join Studymatch'} s="Keep it fresh so the right people find you."/><Profile me={me} setMe={saveMe}/></>}
     </main>
+    <footer className="max-w-6xl mx-auto px-4 pb-24 lg:pb-8 text-center"><button onClick={goAdmin} className="text-[10px] text-slate-400/50 hover:text-slate-500">admin</button></footer>
     {inv&&<Modal onClose={()=>setInv(false)}><h3 className="font-display text-xl">{tr('Invite students')}</h3><p className="text-sm text-slate-500 mt-1 mb-4">{tr('Share this link. Whoever opens it can create a profile and join Studymatch.')}</p><input readOnly className={inp} value={LINK} onFocus={e=>e.target.select()}/><button className={prim+' w-full mt-3'} onClick={copy}>{tr('Copy link')}</button></Modal>}
     {toast&&<div className="pop fixed left-1/2 -translate-x-1/2 bottom-24 lg:bottom-8 z-[60] px-4 py-2.5 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-sm max-w-[90vw]">{toast}</div>}
     <CallLayer rt={rt} myId={myId} meName={me.name||'Student'} cmd={cmd} flash={flash}/>

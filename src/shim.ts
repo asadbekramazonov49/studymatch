@@ -48,6 +48,12 @@ function installSupabase() {
       doc(id) {
         return {
           async set(v) { await ready; check(await sb.from('docs').upsert({ collection: path, id, data: v }, { onConflict: 'collection,id' })); },
+          // update() changes an existing row only (used by the receiver of a request or booking).
+          async update(v) {
+            await ready;
+            const r = check(await sb.from('docs').update({ data: v }).eq('collection', path).eq('id', id).select('id'));
+            if (!r.data || !r.data.length) throw new Error('not updated');
+          },
           async delete() { await ready; check(await sb.from('docs').delete().eq('collection', path).eq('id', id)); },
         };
       },
@@ -76,8 +82,18 @@ function installSupabase() {
       await x.c.send({ type: 'broadcast', event: 'sig', payload });
     },
   };
+  const admin = {
+    async signIn(email, password) { const { error } = await sb.auth.signInWithPassword({ email, password }); if (error) throw error; },
+    async signOut() { await sb.auth.signOut(); },
+    async isAdmin() { await ready; const { data, error } = await sb.rpc('is_admin'); return !error && data === true; },
+    async ban(target) { check(await sb.rpc('ban_user', { target })); },
+    async unban(target) { check(await sb.rpc('unban_user', { target })); },
+    async bans() { const r = check(await sb.rpc('list_bans')); return r.data || []; },
+  };
+
   window.claude = {
     use: async (n) => {
+      if (n === 'admin') return admin;
       if (n === 'rt') return rt;
       if (n === 'user') return { id: () => ready };
       if (n === 'db') return { collection: col };
