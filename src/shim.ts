@@ -82,6 +82,14 @@ function installSupabase() {
       await x.c.send({ type: 'broadcast', event: 'sig', payload });
     },
   };
+  const auth = {
+    async user() { const { data: { session } } = await sb.auth.getSession(); const u = session && session.user; return u ? { id: u.id, email: u.email || '', anon: !!u.is_anonymous, name: (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || '' } : null; },
+    async google() { const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } }); if (error) throw error; },
+    async signUp(email, password) { const { data, error } = await sb.auth.signUp({ email, password, options: { emailRedirectTo: location.origin + location.pathname } }); if (error) throw error; return { needsConfirm: !data.session }; },
+    async signIn(email, password) { const { error } = await sb.auth.signInWithPassword({ email, password }); if (error) throw error; },
+    async magic(email) { const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname } }); if (error) throw error; },
+    async signOut() { await sb.auth.signOut(); },
+  };
   const admin = {
     async signIn(email, password) { const { error } = await sb.auth.signInWithPassword({ email, password }); if (error) throw error; },
     async signOut() { await sb.auth.signOut(); },
@@ -93,6 +101,7 @@ function installSupabase() {
 
   window.claude = {
     use: async (n) => {
+      if (n === 'auth') return auth;
       if (n === 'admin') return admin;
       if (n === 'rt') return rt;
       if (n === 'user') return { id: () => ready };

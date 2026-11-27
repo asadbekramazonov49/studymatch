@@ -26,3 +26,8 @@ Without Supabase keys the site runs in demo mode (data stays in your browser).
 2. SQL Editor: `insert into public.admins (user_id) values ('THE-UID');`
 3. On the site, click the small “admin” link at the bottom and sign in.
 Admins can delete members/files/essays, ban users, edit university admission details, and create practice tests from PDF or pasted text.
+
+## Sign-in
+- Google: Google Cloud Console → OAuth client (Web). Authorized redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`. Paste Client ID/Secret into Supabase → Authentication → Sign In / Providers → Google. Publish the consent screen.
+- Supabase → Authentication → URL Configuration: set Site URL and Redirect URLs to your site address.
+- Email + password works instantly if *Confirm email* is off. Magic links and confirmation emails need your own SMTP (Supabase's built-in mailer is heavily limited).

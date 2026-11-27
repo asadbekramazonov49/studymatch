@@ -7,8 +7,8 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 @keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
 .up{animation:up .45s ease both}.pop{animation:pop .22s ease both}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:rgba(246,246,242,.9);backdrop-filter:blur(12px)}
-.dark body::before{background:rgba(17,19,16,.9)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:rgba(245,247,252,.92);backdrop-filter:blur(12px)}
+.dark body::before{background:rgba(12,16,32,.92)}
 
-h1,h2,.font-display{font-family:Fraunces,Georgia,serif;font-weight:600!important;letter-spacing:-.015em}
+h1,h2,.font-display{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800!important;letter-spacing:-.025em}
 body{font-feature-settings:'ss01'}

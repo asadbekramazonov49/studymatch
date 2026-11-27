@@ -193,7 +193,7 @@ const UWC_SCH: L3 = { en: 'Need-based, full or partial. UWC says over 80% of IB 
 const UWC_HOW: L3 = { en: 'Apply through the UWC Uzbekistan National Committee, not to the college directly. After selection, families go through a financial assessment that sets the scholarship amount.', ru: 'Подавайте заявку через Национальный комитет UWC Узбекистан, а не напрямую в колледж. После отбора семья проходит финансовую оценку, по ней определяют размер стипендии.', uz: 'Kollejga to‘g‘ridan-to‘g‘ri emas, UWC O‘zbekiston Milliy qo‘mitasi orqali ariza bering. Tanlovdan keyin oila moliyaviy baholashdan o‘tadi, stipendiya miqdori shu bilan belgilanadi.' };
 const CHK_SCH: L3 = { en: 'Many schools like this offer need-based financial aid or scholarships to some international students. Amounts and availability vary and can be limited. We have not confirmed aid specifically for Uzbek citizens.', ru: 'Многие такие школы предлагают финансовую помощь по потребности или стипендии отдельным иностранным ученикам. Суммы и наличие различаются и могут быть ограничены. Помощь именно для граждан Узбекистана мы не подтверждали.', uz: 'Bunday maktablarning ko‘pchiligi ba’zi xorijiy o‘quvchilarga ehtiyojga qarab moliyaviy yordam yoki stipendiya beradi. Miqdori va mavjudligi har xil va cheklangan bo‘lishi mumkin. O‘zbekiston fuqarolari uchun alohida yordamni tasdiqlamadik.' };
 const CHK_HOW: L3 = { en: 'Check the school’s admissions and financial aid pages for the current application round, deadlines and whether international families can apply for aid. Typical requirements: transcripts, English test (TOEFL or Duolingo), recommendations and an interview.', ru: 'Смотрите на сайте школы страницы приёма и финансовой помощи: текущий набор, сроки и могут ли иностранные семьи подавать на помощь. Обычно нужны: табель, тест по английскому (TOEFL или Duolingo), рекомендации и собеседование.', uz: 'Maktab saytidagi qabul va moliyaviy yordam sahifalarini tekshiring: joriy qabul, muddatlar va xorijiy oilalar yordamga ariza bera olishi. Odatda kerak: baholar jadvali, ingliz tili testi (TOEFL yoki Duolingo), tavsiyanomalar va suhbat.' };
-type School = { n: string; co: string; city: string; url: string; tier: 'uzbek' | 'check'; scholar: L3; how: L3 };
+type School = { n: string; co: string; city: string; url: string; tier: 'uzbek' | 'check' | 'local'; scholar: L3; how: L3 };
 const uwc = (n: string, co: string, city: string): School => ({ n, co, city, url: 'https://uz.uwc.org', tier: 'uzbek', scholar: UWC_SCH, how: UWC_HOW });
 const chk = (n: string, co: string, city: string, u: string): School => ({ n, co, city, url: 'https://' + u, tier: 'check', scholar: CHK_SCH, how: CHK_HOW });
 const US = 'United States', UK = 'United Kingdom', CA = 'Canada';
@@ -204,6 +204,16 @@ export const SCHOOLS: School[] = [
   uwc('UWC Costa Rica', 'Costa Rica', 'Santa Ana'), uwc('UWC Mostar', 'Bosnia and Herzegovina', 'Mostar'), uwc('UWC Maastricht', 'Netherlands', 'Maastricht'),
   uwc('UWC Robert Bosch College', 'Germany', 'Freiburg'), uwc('UWC Dilijan', 'Armenia', 'Dilijan'), uwc('UWC ISAK Japan', 'Japan', 'Karuizawa'),
   uwc('UWC Changshu China', 'China', 'Changshu'), uwc('UWC Thailand', 'Thailand', 'Phuket'), uwc('UWC East Africa', 'Tanzania', 'Arusha'),
+  {
+    n: 'Presidential Schools (PIIMA)', co: 'Uzbekistan', city: '14 regions', url: 'https://piima.uz', tier: 'local',
+    scholar: { en: 'State schools for ages 11–18. Education, meals and boarding are free for students who pass the entrance exam.', ru: 'Государственные школы для учеников 11–18 лет. Обучение, питание и проживание бесплатны для тех, кто сдал вступительный экзамен.', uz: '11–18 yoshdagi o‘quvchilar uchun davlat maktablari. Kirish imtihonidan o‘tganlar uchun ta’lim, ovqat va yotoqxona bepul.' },
+    how: { en: 'Apply online during the yearly admission window and pass the entrance exam. There are no privileges for admission. See piima.uz for the current round and exam format.', ru: 'Подайте заявку онлайн в период ежегодного приёма и сдайте вступительный экзамен. Льгот при поступлении нет. Текущий набор и формат экзамена смотрите на piima.uz.', uz: 'Yillik qabul davrida onlayn ariza bering va kirish imtihonidan o‘ting. Qabulda imtiyozlar yo‘q. Joriy qabul va imtihon formati piima.uz da.' },
+  },
+  {
+    n: 'Specialized and Creative Schools (PIIMA)', co: 'Uzbekistan', city: 'Uzbekistan', url: 'https://piima.uz', tier: 'local',
+    scholar: { en: 'Run by the same agency as the Presidential Schools. The agency publishes admission information for these schools separately.', ru: 'Управляются тем же агентством, что и президентские школы. Информацию о приёме агентство публикует отдельно.', uz: 'Prezident maktablari bilan bir agentlik boshqaradi. Qabul ma’lumotlarini agentlik alohida e’lon qiladi.' },
+    how: { en: 'See piima.uz for the admission rules of each school type.', ru: 'Правила приёма для каждого типа школ смотрите на piima.uz.', uz: 'Har bir maktab turi uchun qabul qoidalarini piima.uz da ko‘ring.' },
+  },
   {
     n: 'Tashkent International School', co: 'Uzbekistan', city: 'Tashkent', url: 'https://www.tashschool.org', tier: 'uzbek',
     scholar: { en: 'Grade 10 Host Country National scholarship, running since 1999. The school has offered up to three full scholarships a year.', ru: 'Стипендия для граждан принимающей страны в 10 класс, действует с 1999 года. Школа предлагала до трёх полных стипендий в год.', uz: 'Mezbon davlat fuqarolari uchun 10-sinf stipendiyasi, 1999-yildan beri mavjud. Maktab yiliga uchtagacha to‘liq stipendiya taklif qilgan.' },
@@ -271,3 +281,31 @@ export const SAMPLE_TESTS: PTest[] = [
   ] },
 ];
 
+
+// Rough guide only (not official). Used when the university has no details from the admin.
+export const VISA: Record<string, 'easy' | 'medium' | 'hard'> = {
+  'United States': 'hard', Canada: 'hard', Australia: 'hard',
+  China: 'easy', 'South Korea': 'easy', Malaysia: 'easy', 'Türkiye': 'easy', Russia: 'easy', Kazakhstan: 'easy', 'United Arab Emirates': 'easy', Qatar: 'easy',
+  Thailand: 'easy', Indonesia: 'easy', Brazil: 'easy', Chile: 'easy', Mexico: 'easy', Argentina: 'easy', Colombia: 'easy',
+};
+// English-test range, and which SAT note applies: us | some | none
+export const TYPICAL: Record<string, { e: string; s: 'us' | 'some' | 'none' }> = {
+  'United States': { e: 'IELTS 6.5–7.5 or TOEFL 80–110', s: 'us' },
+  'United Kingdom': { e: 'IELTS 6.0–7.5 (top universities usually 7.0 or higher)', s: 'none' },
+  Canada: { e: 'IELTS 6.5 (some programmes 7.0)', s: 'none' },
+  Australia: { e: 'IELTS 6.5 (some programmes 7.0)', s: 'none' },
+  'New Zealand': { e: 'IELTS 6.0–6.5', s: 'none' },
+  Singapore: { e: 'IELTS 6.5–7.0 or TOEFL equivalent', s: 'some' },
+  'Hong Kong SAR China': { e: 'IELTS 6.0–7.0', s: 'some' },
+  China: { e: 'IELTS 6.0–6.5 for English-taught programmes', s: 'none' },
+  Japan: { e: 'IELTS 6.0–6.5 or TOEFL 80+ for English-taught programmes', s: 'none' },
+  'South Korea': { e: 'IELTS 5.5–6.5 or TOEFL 80+', s: 'none' },
+  Germany: { e: 'IELTS 6.0–7.0 for English-taught programmes (German-taught need German)', s: 'none' },
+  Netherlands: { e: 'IELTS 6.0–7.0', s: 'none' },
+  France: { e: 'IELTS 6.0–6.5 for English programmes (French programmes need French)', s: 'none' },
+  Switzerland: { e: 'IELTS 6.5–7.0 or equivalent', s: 'none' },
+  Italy: { e: 'IELTS 5.5–6.5', s: 'none' }, Spain: { e: 'IELTS 6.0–6.5', s: 'none' },
+  Sweden: { e: 'IELTS 6.5', s: 'none' }, Denmark: { e: 'IELTS 6.5', s: 'none' }, Norway: { e: 'IELTS 6.0–6.5', s: 'none' }, Finland: { e: 'IELTS 6.0–6.5', s: 'none' },
+  Ireland: { e: 'IELTS 6.5', s: 'none' },
+  default: { e: 'IELTS 6.0–6.5 is common for English-taught programmes', s: 'none' },
+};

@@ -2,13 +2,13 @@
 import React,{useState,useMemo,useEffect,useRef} from 'react';
 import ReactDOM from 'react-dom/client';
 import { tr, LANG, setLang as setLang0 } from './i18n';
-import { MAJORS, MAJOR_CATS, GUIDES, SCHOOLS, SAMPLE_TESTS } from './data';
+import { MAJORS, MAJOR_CATS, GUIDES, SCHOOLS, SAMPLE_TESTS, VISA, TYPICAL } from './data';
 const L3=(o)=>o[LANG]||o.en;
 
 
 
 const P={phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',video:'<path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/>',bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',calendar:'<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',ext:'<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',image:'<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/>',clip:'<path d="m21.4 11.1-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/>',bookmark:'<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',trash:'<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>',search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',rocket:'<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>',building:'<path d="M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7"/><path d="M12 2 20 7H4z"/>',book:'<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',msg:'<path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>',user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',send:'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',dl:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/>',star:'<path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>',pin:'<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',check:'<path d="M20 6 9 17l-5-5"/>',plus:'<path d="M5 12h14M12 5v14"/>',file:'<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><path d="M14 2v6h6"/>',cap:'<path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>'};
-const I=({n,c='w-5 h-5'})=><svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{__html:P[n]}}/>;
+const I=({n,c='w-5 h-5',sw=2})=><svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{__html:P[n]}}/>;
 
 let PEOPLE=[];
 
@@ -114,8 +114,207 @@ const QS=`1|MIT|United States|Cambridge|massachusetts-institute-technology-mit
 98|Freie Universität Berlin|Germany|Berlin|freie-universitaet-berlin
 98|University of Zurich|Switzerland|Zürich|university-zurich
 100|Purdue University|United States|West Lafayette|purdue-university
-100|University College Dublin|Ireland|Dublin|university-college-dublin`;
-const UNI=QS.split('\n').map(l=>{const [r,n,co,city,slug]=l.split('|');return {n,t:'University',co,city,r:+r,slug,st:null,intl:null,fac:null,ac:null,tu:null,f:null,str:[],ins:`Ranked #${r} in the QS World University Rankings 2027. Open the QS profile for admissions, fees and student data.`}});
+100|University College Dublin|Ireland|Dublin|university-college-dublin
+102|Tohoku University|Japan
+103|Queen Mary University of London|United Kingdom
+104|RWTH Aachen University|Germany
+105|Technical University of Denmark|Denmark
+106|Pohang University of Science And Technology (POSTECH)|South Korea
+107|King Saud University|Saudi Arabia
+108|Sungkyunkwan University (SKKU)|South Korea
+109|Qatar University|Qatar
+110|KIT, Karlsruhe Institute of Technology|Germany
+111|Sapienza University of Rome|Italy
+111|University of Southampton|United Kingdom
+113|University of Waterloo|Canada
+113|Utrecht University|Netherlands
+115|Lomonosov Moscow State University|Russia
+115|University of St Andrews|United Kingdom
+118|Indian Institute of Technology Delhi (IITD)|India
+119|Leiden University|Netherlands
+119|Pontificia Universidad Católica de Chile (UC)|Chile
+119|RMIT University|Australia
+122|Rice University|United States
+123|Alma Mater Studiorum - Università di Bologna|Italy
+123|University of Helsinki|Finland
+125|University of Bath|United Kingdom
+126|Aalto University|Finland
+126|Macquarie University|Australia
+128|Aarhus University|Denmark
+128|Universiti Sains Malaysia (USM)|Malaysia
+130|Universiti Kebangsaan Malaysia (UKM)|Malaysia
+131|University of Oslo|Norway
+131|University of Wisconsin-Madison|United States
+133|Universidade de São Paulo|Brazil
+134|Indian Institute of Technology Bombay (IITB)|India
+134|University of Science and Technology of China|China
+136|University of Exeter|United Kingdom
+137|University of California, Davis|United States
+138|Universiti Putra Malaysia (UPM)|Malaysia
+139|University of Liverpool|United Kingdom
+140|Humboldt-Universität zu Berlin|Germany
+140|University of Vienna|Austria
+142|Georgia Institute of Technology|United States
+142|National Tsing Hua University (NTHU)|Taiwan
+142|Western University|Canada
+145|Universidad Nacional Autónoma de México (UNAM)|Mexico
+146|Tongji University|China
+147|Khalifa University|United Arab Emirates
+148|Erasmus University Rotterdam|Netherlands
+149|Newcastle University|United Kingdom
+150|Ghent University|Belgium
+150|University of Basel|Switzerland
+152|Eindhoven University of Technology|Netherlands
+153|University of Southern California|United States
+154|Wageningen University & Research|Netherlands
+155|Hanyang University|South Korea
+156|Nagoya University|Japan
+157|University of Groningen|Netherlands
+158|Technische Universität Berlin (TU Berlin)|Germany
+158|Universiti Teknologi Malaysia|Malaysia
+158|University of North Carolina at Chapel Hill|United States
+158|University of York|United Kingdom
+162|Université de Montréal|Canada
+162|Washington University in St. Louis|United States
+164|Lancaster University|United Kingdom
+165|Universitat de Barcelona|Spain
+165|Wuhan University|China
+167|Stockholm University|Sweden
+168|University of Geneva|Switzerland
+169|Texas A&M University|United States
+170|Indian Institute of Technology Madras (IITM)|India
+171|Kyushu University|Japan
+172|Arizona State University|United States
+173|University of California, Santa Barbara (UCSB)|United States
+174|Chalmers University of Technology|Sweden
+174|McMaster University|Canada
+174|Queen’s University Belfast|United Kingdom
+177|Al-Farabi Kazakh National University|Kazakhstan
+177|National Yang Ming Chiao Tung University (NYCU)|Taiwan
+179|Cardiff University|United Kingdom
+179|Hokkaido University|Japan
+179|Queen’s University at Kingston|Canada
+182|Michigan State University|United States
+183|Emory University|United States
+184|University of Cape Town|South Africa
+185|Technische Universität Dresden|Germany
+185|Universidad de Chile|Chile
+185|Vrije Universiteit Amsterdam|Netherlands
+188|Tecnológico de Monterrey|Mexico
+189|Curtin University|Australia
+190|Harbin Institute of Technology|China
+191|National Cheng Kung University (NCKU)|Taiwan
+191|Technische Universität Wien|Austria
+191|Universitas Indonesia|Indonesia
+191|University of Bern|Switzerland
+195|University of Wollongong|Australia
+196|Université catholique de Louvain (UCLouvain)|Belgium
+196|University of Reading|United Kingdom
+198|University of Otago|New Zealand
+199|Complutense University of Madrid|Spain
+200|King Abdulaziz University (KAU)|Saudi Arabia
+201|The Ohio State University|United States
+201|Waseda University|Japan
+203|Loughborough University|United Kingdom
+204|Università di Padova|Italy
+205|Indian Institute of Technology Kharagpur (IIT-KGP)|India
+206|Gadjah Mada University|Indonesia
+206|Politecnico di Torino|Italy
+208|Tel Aviv University|Israel
+209|Rheinische Friedrich-Wilhelms-Universität Bonn|Germany
+209|Universität Hamburg|Germany
+211|Universitat Autònoma de Barcelona|Spain
+212|Chulalongkorn University|Thailand
+213|Hamad Bin Khalifa University (HBKU)|Qatar
+213|Keio University|Japan
+215|Massey University|New Zealand
+216|Hong Kong Baptist University|Hong Kong SAR China
+217|United Arab Emirates University|United Arab Emirates
+218|Friedrich-Alexander-Universität Erlangen-Nürnberg|Germany
+218|The Hebrew University of Jerusalem|Israel
+220|University College Cork|Ireland
+221|Indian Institute of Science (IISc) Bangalore|India
+221|Indian Institute of Technology Kanpur (IITK)|India
+223|American University of Beirut (AUB)|Lebanon
+223|University of Twente|Netherlands
+225|University of Gothenburg|Sweden
+226|Universidad Autónoma de Madrid|Spain
+227|Deakin University|Australia
+228|University of Florida|United States
+228|University of Ottawa|Canada
+230|Eberhard Karls Universität Tübingen|Germany
+230|Griffith University|Australia
+230|University of Strathclyde|United Kingdom
+233|Universidad de los Andes|Colombia
+233|University of Lausanne|Switzerland
+235|École Normale Supérieure de Lyon|France
+235|Tianjin University|China
+237|Beijing Normal University|China
+237|University of Lisbon|Portugal
+239|Central European University|Austria
+240|Queensland University of Technology (QUT)|Australia
+241|La Trobe University|Australia
+241|Victoria University of Wellington|New Zealand
+243|Beijing Institute of Technology|China
+244|The University of Newcastle, Australia|Australia
+245|Albert-Ludwigs-Universität Freiburg|Germany
+246|Université Paris 1 Panthéon-Sorbonne|France
+246|University of Surrey|United Kingdom
+248|Université libre de Bruxelles|Belgium
+249|University of Calgary|Canada
+250|Technical University of Darmstadt|Germany
+251|University of Rochester|United States
+252|University of California, Irvine|United States
+252|University of Maryland, College Park|United States
+254|Maastricht University|Netherlands
+255|University of Minnesota (System)|United States
+255|University of Porto|Portugal
+257|University of Canterbury|New Zealand
+258|American University of Sharjah|United Arab Emirates
+258|Sun Yat-sen University|China
+260|University of Massachusetts Amherst|United States
+261|Universiti Teknologi PETRONAS (UTP)|Malaysia
+261|University of Göttingen|Germany
+263|Universitat Pompeu Fabra (Barcelona)|Spain
+264|Norwegian University of Science and Technology|Norway
+265|Vanderbilt University|United States
+266|Singapore University of Technology and Design|Singapore
+267|University of Macau|Macao SAR China
+268|University of Virginia|United States
+269|University of Cologne|Germany
+270|Dartmouth College|United States
+270|University of Milan|Italy
+272|Taylor’s University|Malaysia
+273|Charles University|Czechia
+273|University of Sussex|United Kingdom
+275|University of Galway|Ireland
+276|Universitas Airlangga|Indonesia
+277|Universidade Estadual de Campinas (Unicamp)|Brazil
+277|University of Antwerp|Belgium
+279|Istanbul Technical University|Türkiye
+279|University of Navarra|Spain
+279|University of Pittsburgh|United States
+282|UCSI University|Malaysia
+283|Radboud University|Netherlands
+283|University of Bergen|Norway
+283|University of Sharjah|United Arab Emirates
+283|University of Southern Denmark (SDU)|Denmark
+287|Institut Teknologi Bandung (ITB)|Indonesia
+288|University of Aberdeen|United Kingdom
+289|Georgetown University|United States
+289|University of Warsaw|Poland
+291|Swinburne University of Technology|Australia
+292|University of Johannesburg|South Africa
+293|Universidad Nacional de Colombia|Colombia
+293|University of Waikato|New Zealand
+295|Vrije Universiteit Brussel (VUB)|Belgium
+296|Stellenbosch University|South Africa
+296|Xi’an Jiaotong University|China
+298|Dalhousie University|Canada
+299|Ulsan National Institute of Science and Technology (UNIST)|South Korea
+300|Sichuan University|China
+300|University of Notre Dame|United States`;
+const UNI=QS.split('\n').map(l=>{const [r,n,co,city,sl]=l.split('|');const slug=sl||('q'+r+'-'+n.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40));return {n,t:'University',co,city:city||'',qs:!!sl,r:+r,slug,st:null,intl:null,fac:null,ac:null,tu:null,f:null,str:[],ins:`Ranked #${r} in the QS World University Rankings 2027.`}});
 Object.assign(UNI[0],{st:11694,intl:3808,fac:3112,ins:'Ranked #1 in the QS World University Rankings 2027. Student and staff figures are from the QS profile.'});
 const INST=UNI;
 
@@ -138,7 +337,7 @@ const mj=en=>{const m=MAJORS.find(x=>x.en===en);return m?L3(m.name):en};
 function Discover({myId,friends,sent,received,connect,accept,openChat,invite,initMajor}){
   const [mode,setMode]=useState('partner'),[q,setQ]=useState(''),[maxAge,setMaxAge]=useState(30),[major,setMajor]=useState(initMajor||''),[type,setType]=useState('All'),[sel,setSel]=useState(null);
   const extra=[...new Set(PEOPLE.map(p=>p.major))].filter(x=>x&&!MAJORS.some(m=>m.en===x));
-  const list=useMemo(()=>PEOPLE.filter(p=>p.id!==myId&&(p.mode===mode||p.mode==='both')&&p.age<=maxAge&&(!major||p.major===major)&&(type==='All'||p.type===type)&&(`${p.name} ${p.inst} ${p.major} ${(p.skills||[]).join(' ')} ${p.goal}`).toLowerCase().includes(q.toLowerCase())),[mode,q,maxAge,major,type,PEOPLE]);
+  const list=useMemo(()=>PEOPLE.filter(p=>p.id!==myId&&(p.mode===mode||p.mode==='both')&&p.age<=maxAge&&(!major||p.major===major)&&(type==='All'||p.type===type)&&(`${p.name} ${p.inst} ${p.target||''} ${p.major} ${(p.skills||[]).join(' ')} ${p.goal}`).toLowerCase().includes(q.toLowerCase())),[mode,q,maxAge,major,type,PEOPLE]);
   const act=(p,cls='')=>friends.has(p.id)?<button onClick={e=>{e.stopPropagation();openChat(p.id);setSel(null)}} className={`${ghost} ${cls}`}><I n="msg" c="w-4 h-4"/>{tr('Message')}</button>
     :received.has(p.id)?<button onClick={e=>{e.stopPropagation();accept(received.get(p.id),'accepted')}} className={`${prim} ${cls}`}><I n="check" c="w-4 h-4"/>{tr('Accept request')}</button>
     :sent.has(p.id)?<button disabled className={`${ghost} ${cls} opacity-60`}>{tr('Request sent')}</button>
@@ -155,12 +354,12 @@ function Discover({myId,friends,sent,received,connect,accept,openChat,invite,ini
     <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">{list.map((p,i)=><div key={p.id} className={`${card} p-5 up cursor-pointer`} style={{animationDelay:`${i*40}ms`}} onClick={()=>setSel(p)}>
       <div className="flex gap-3 items-center"><Av p={p}/><div className="min-w-0"><h3 className="font-semibold truncate">{p.name}</h3><p className="text-xs text-slate-500 truncate">{mj(p.major)} · {p.age}</p></div></div>
       <p className="text-sm mt-4 text-slate-600 dark:text-slate-300 line-clamp-2">{p.goal}</p>
-      <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-3"><I n={p.type==='School'?'book':'cap'} c="w-3.5 h-3.5"/>{p.inst}</div>
+      <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-3"><I n={p.type==='School'?'book':'cap'} c="w-3.5 h-3.5"/>{p.type==='School'?`${tr('Target university')}: ${p.target||'—'}`:p.inst}</div>
       <div className="flex flex-wrap gap-1.5 mt-3">{(p.skills||[]).map(s=><Chip key={s}>{s}</Chip>)}</div>
       {act(p,'w-full mt-4')}
     </div>)}</div>
     {sel&&<Modal onClose={()=>setSel(null)}><div className="flex gap-4 items-center"><Av p={sel} s="w-16 h-16"/><div><h3 className="font-display text-xl">{sel.name}</h3><p className="text-sm text-slate-500">{mj(sel.major)} · {sel.age}</p></div></div>
-      <div className="mt-5 space-y-4 text-sm"><div><b>{tr('Institution')}</b><p className="text-slate-500">{sel.inst} ({tr(sel.type)})</p></div><div><b>{tr('Goal')}</b><p className="text-slate-500">{sel.goal}</p></div><div><b>{tr('Looking for')}</b><p className="text-slate-500">{sel.mode==='both'?tr('Study partner')+' & '+tr('Startup co-founder'):sel.mode==='partner'?tr('Study partner'):tr('Startup co-founder')}</p></div><div className="flex flex-wrap gap-1.5">{(sel.skills||[]).map(s=><Chip key={s}>{s}</Chip>)}</div></div>
+      <div className="mt-5 space-y-4 text-sm"><div><b>{sel.type==='School'?tr('Target university'):tr('Institution')}</b><p className="text-slate-500">{sel.type==='School'?(sel.target||'—'):sel.inst} ({tr(sel.type)})</p></div><div><b>{tr('Goal')}</b><p className="text-slate-500">{sel.goal}</p></div><div><b>{tr('Looking for')}</b><p className="text-slate-500">{sel.mode==='both'?tr('Study partner')+' & '+tr('Startup co-founder'):sel.mode==='partner'?tr('Study partner'):tr('Startup co-founder')}</p></div><div className="flex flex-wrap gap-1.5">{(sel.skills||[]).map(s=><Chip key={s}>{s}</Chip>)}</div></div>
       <div className="mt-6">{act(sel,'w-full')}</div></Modal>}
   </div>;
 }
@@ -178,8 +377,12 @@ function Majors({goMajor}){
   </div>;
 }
 
+const SATTXT={us:'SAT or ACT: required or optional depending on the university. Check each policy.',some:'SAT is sometimes accepted from international applicants. Check the university.',none:'SAT is usually not required. Admission is based on your school-leaving results.'};
+const GRADES='Strong grades are expected, and more so at top-ranked universities.';
+const VCOL={easy:'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300',medium:'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300',hard:'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-300'};
+const VLAB={easy:'Easy',medium:'Medium',hard:'Hard'};
 function Institutions({uinfo}){
-  const [q,setQ]=useState(''),[t,setT]=useState('All'),[sort,setSort]=useState('r'),[co,setCo]=useState(''),[sel,setSel]=useState(null);
+  const [q,setQ]=useState(''),[t,setT]=useState('University'),[sort,setSort]=useState('r'),[co,setCo]=useState(''),[sel,setSel]=useState(null);
   const hit=s=>s.toLowerCase().includes(q.toLowerCase());
   const ul=(t==='School'?[]:INST.filter(i=>(!co||i.co===co)&&hit(`${i.n} ${i.co} ${i.city}`))).sort((a,b)=>sort==='s'?(b.st||0)-(a.st||0):sort==='n'?a.n.localeCompare(b.n):a.r-b.r);
   const sl=t==='University'?[]:SCHOOLS.filter(s=>(!co||s.co===co)&&hit(`${s.n} ${s.co} ${s.city}`));
@@ -187,26 +390,30 @@ function Institutions({uinfo}){
   const Stat=({l,v})=><div className="rounded-xl bg-slate-100 dark:bg-white/5 p-3"><p className="text-xs text-slate-500">{tr(l)}</p><p className="font-semibold">{v}</p></div>;
   const n=x=>x?x.toLocaleString():'—';
   return <div>
-    <Head t="Universities and schools" s="The QS World University Rankings 2027 top 100, and 50 schools that offer scholarships or aid."/>
-    <div className="flex flex-wrap gap-3 mb-6 up"><Tabs v={t} set={setT} opts={[['All','All'],['University','All Universities','cap'],['School','All Schools','book']]}/>
+    <Head t="Universities and schools" s="The QS World University Rankings 2027 top 300, and schools that offer scholarships or aid."/>
+    <div className="flex flex-wrap gap-3 mb-6 up"><Tabs v={t} set={setT} opts={[['University','All Universities','cap'],['School','All Schools','book']]}/>
       <div className="relative flex-1 min-w-[200px]"><span className="absolute left-3 top-3 text-slate-400"><I n="search" c="w-4 h-4"/></span><input className={inp+' pl-9'} placeholder={tr('Search by name, country or city…')} value={q} onChange={e=>setQ(e.target.value)}/></div>
       <select className={inp+' !w-auto'} value={co} onChange={e=>setCo(e.target.value)}><option value="">{tr('All countries')}</option>{countries.map(c=><option key={c} value={c}>{tr(c)}</option>)}</select>
       <select className={inp+' !w-auto'} value={sort} onChange={e=>setSort(e.target.value)}><option value="r">{tr('Sort: Ranking')}</option><option value="s">{tr('Sort: Students')}</option><option value="n">{tr('Sort: Name')}</option></select></div>
     {t!=='School'&&<p className="text-xs text-slate-500 mb-4">{tr('Ranks are from QS World University Rankings 2027. Ties share a rank. Full ranking:')} <a className="underline" href="https://www.topuniversities.com/world-university-rankings" target="_blank" rel="noopener noreferrer">topuniversities.com</a></p>}
     {t!=='University'&&<div className={`${card} p-4 mb-6 text-sm text-slate-600 dark:text-slate-300`}>{tr('Schools marked “Confirmed for Uzbek students” have a scholarship we checked on the school’s own pages. The others are known for offering aid to some international students, so check each school. Schools in Kazakhstan, Kyrgyzstan and Tajikistan are not listed because we could not verify them.')}</div>}
     <div className="grid md:grid-cols-2 gap-5">
-      {sl.map((s,k)=><div key={s.n} onClick={()=>setSel({...s,school:true})} className={`${card} p-5 up cursor-pointer`} style={{animationDelay:`${k*40}ms`}}><Chip c={s.tier==='uzbek'?'!bg-violet-100 !text-violet-700 dark:!bg-violet-400/15 dark:!text-violet-300':''}>{s.tier==='uzbek'?tr('Confirmed for Uzbek students'):tr('Check aid for international students')}</Chip><h3 className="font-semibold mt-3">{s.n}</h3><p className="text-xs text-slate-500 flex items-center gap-1 mt-1"><I n="pin" c="w-3 h-3"/>{s.city}, {tr(s.co)}</p><p className="text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">{L3(s.scholar)}</p></div>)}
+      {sl.map((s,k)=><div key={s.n} onClick={()=>setSel({...s,school:true})} className={`${card} p-5 up cursor-pointer`} style={{animationDelay:`${k*40}ms`}}><Chip c={s.tier!=='check'?'!bg-violet-100 !text-violet-700 dark:!bg-violet-400/15 dark:!text-violet-300':''}>{s.tier==='uzbek'?tr('Confirmed for Uzbek students'):s.tier==='local'?tr('School in Uzbekistan'):tr('Check aid for international students')}</Chip><h3 className="font-semibold mt-3">{s.n}</h3><p className="text-xs text-slate-500 flex items-center gap-1 mt-1"><I n="pin" c="w-3 h-3"/>{s.city}, {tr(s.co)}</p><p className="text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">{L3(s.scholar)}</p></div>)}
       {ul.map((i,k)=><div key={i.n} onClick={()=>setSel(i)} className={`${card} p-5 flex gap-4 up cursor-pointer`} style={{animationDelay:`${k*20}ms`}}>
         <div className="w-14 h-14 rounded-xl grid place-items-center text-white font-semibold text-sm shrink-0 bg-slate-800 dark:bg-slate-700">#{i.r}</div>
-        <div className="min-w-0"><h3 className="font-semibold">{i.n}</h3><p className="text-xs text-slate-500 flex items-center gap-1 mt-1"><I n="pin" c="w-3 h-3"/>{i.city}, {tr(i.co)}</p></div></div>)}
+        <div className="min-w-0"><h3 className="font-semibold">{i.n}</h3><p className="text-xs text-slate-500 flex items-center gap-1 mt-1"><I n="pin" c="w-3 h-3"/>{i.city?i.city+', ':''}{tr(i.co)}</p></div></div>)}
     </div>
     {!ul.length&&!sl.length&&<div className="text-center py-16 text-slate-500">{tr('No institutions found.')}</div>}
-    {sel&&sel.school&&<Modal onClose={()=>setSel(null)}><div className="flex flex-wrap gap-2"><Chip>{tr('School')}</Chip><Chip c={sel.tier==='uzbek'?'!bg-violet-100 !text-violet-700 dark:!bg-violet-400/15 dark:!text-violet-300':''}>{sel.tier==='uzbek'?tr('Confirmed for Uzbek students'):tr('Check aid for international students')}</Chip></div><h3 className="font-display text-2xl mt-2">{sel.n}</h3><p className="text-sm text-slate-500 flex items-center gap-1"><I n="pin" c="w-3.5 h-3.5"/>{sel.city}, {tr(sel.co)}</p>
+    {sel&&sel.school&&<Modal onClose={()=>setSel(null)}><div className="flex flex-wrap gap-2"><Chip>{tr('School')}</Chip><Chip c={sel.tier!=='check'?'!bg-violet-100 !text-violet-700 dark:!bg-violet-400/15 dark:!text-violet-300':''}>{sel.tier==='uzbek'?tr('Confirmed for Uzbek students'):sel.tier==='local'?tr('School in Uzbekistan'):tr('Check aid for international students')}</Chip></div><h3 className="font-display text-2xl mt-2">{sel.n}</h3><p className="text-sm text-slate-500 flex items-center gap-1"><I n="pin" c="w-3.5 h-3.5"/>{sel.city?sel.city+', ':''}{tr(sel.co)}</p>
       <h4 className="font-semibold mt-5">{tr('Scholarship')}</h4><p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{L3(sel.scholar)}</p>
       <h4 className="font-semibold mt-4">{tr('How to apply')}</h4><p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{L3(sel.how)}</p>
       <a href={sel.url} target="_blank" rel="noopener noreferrer" className={ghost+' w-full mt-5'}>{tr('Official website')}<I n="ext" c="w-4 h-4"/></a></Modal>}
-    {sel&&!sel.school&&<Modal onClose={()=>setSel(null)}><Chip>{tr('University')}</Chip><h3 className="font-display text-2xl mt-2">{sel.n}</h3><p className="text-sm text-slate-500 flex items-center gap-1"><I n="pin" c="w-3.5 h-3.5"/>{sel.city}, {tr(sel.co)}</p>
+    {sel&&!sel.school&&<Modal onClose={()=>setSel(null)}><Chip>{tr('University')}</Chip><h3 className="font-display text-2xl mt-2">{sel.n}</h3><p className="text-sm text-slate-500 flex items-center gap-1"><I n="pin" c="w-3.5 h-3.5"/>{sel.city?sel.city+', ':''}{tr(sel.co)}</p>
       <div className="grid grid-cols-2 gap-3 mt-5"><Stat l="Ranking" v={`#${sel.r} (QS 2027)`}/><Stat l="Students" v={n(sel.st)}/><Stat l="International students" v={n(sel.intl)}/><Stat l="Faculty staff" v={n(sel.fac)}/><Stat l="Studymatch members" v={PEOPLE.filter(p=>p.inst===sel.n).length}/></div>
+      {(()=>{const ty=TYPICAL[sel.co]||TYPICAL.default,vi=VISA[sel.co]||'medium';return <div className="mt-5 rounded-xl bg-slate-100 dark:bg-white/5 p-4 text-sm"><h4 className="font-semibold">{tr('Typical for universities in this country')}</h4>
+        <ul className="mt-2 space-y-1.5 text-slate-600 dark:text-slate-300"><li><b>{tr('English test')}:</b> {ty.e}</li><li><b>SAT / ACT:</b> {tr(SATTXT[ty.s])}</li><li><b>{tr('Grades')}:</b> {tr(GRADES)}</li></ul>
+        <p className="mt-3 flex items-center gap-2"><b>{tr('Visa for Uzbek citizens')}:</b><span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${VCOL[vi]}`}>{tr(VLAB[vi])}</span></p>
+        <p className="text-xs text-slate-500 mt-3">{tr('Our rough guide, not official. These are general ranges for the country, not this university’s own requirements. Rules change and differ by programme, so check the university and the embassy.')}</p></div>})()}
       {(()=>{const u=(uinfo&&uinfo[sel.slug])||{};const has=u.ielts||u.toefl||u.sat||u.gpa||u.deadline||u.scholarship||u.how;return <div className="mt-5"><h4 className="font-semibold">{tr('Admission requirements')}</h4>
         {has?<><div className="grid grid-cols-2 gap-3 mt-2">{[['IELTS',u.ielts],['TOEFL',u.toefl],['SAT / ACT',u.sat],['GPA',u.gpa],['Application deadline',u.deadline]].map(([l,v])=><Stat key={l} l={l} v={v||'—'}/>)}</div>
           {u.scholarship&&<><h4 className="font-semibold mt-4">{tr('Scholarships')}</h4><p className="text-sm text-slate-600 dark:text-slate-300 mt-1 whitespace-pre-line">{u.scholarship}</p></>}
@@ -214,7 +421,7 @@ function Institutions({uinfo}){
         :<p className="text-sm text-slate-500 mt-2">{tr('Admission details have not been added for this university yet. Open the QS profile or the official admissions page.')}</p>}
         {u.url&&<a href={u.url} target="_blank" rel="noopener noreferrer" className={ghost+' w-full mt-4'}>{tr('Official admissions page')}<I n="ext" c="w-4 h-4"/></a>}</div>})()}
       <p className="text-xs text-slate-500 mt-4">{tr('Student and staff numbers are filled in where the QS profile was available. Open the QS profile for admissions, fees and more.')}</p>
-      <a href={sel.slug?`https://www.topuniversities.com/universities/${sel.slug}`:'https://www.topuniversities.com/world-university-rankings'} target="_blank" rel="noopener noreferrer" className={ghost+' w-full mt-5'}>{tr('View full profile on QS')}<I n="ext" c="w-4 h-4"/></a></Modal>}
+      <a href={sel.qs?`https://www.topuniversities.com/universities/${sel.slug}`:'https://www.topuniversities.com/world-university-rankings'} target="_blank" rel="noopener noreferrer" className={ghost+' w-full mt-5'}>{sel.qs?tr('View full profile on QS'):tr('View full ranking on QS')}<I n="ext" c="w-4 h-4"/></a></Modal>}
   </div>;
 }
 
@@ -286,12 +493,27 @@ function Essays({db,myId,me,flash,send}){
 }
 function Materials(p){const [m,setM]=useState('guides');return <div><div className="mb-6"><Tabs v={m} set={setM} opts={[['guides','Guides','cap'],['practice','Practice','file'],['files','Files','file'],['essays','Essays','book']]}/></div>{m==='guides'?<Guides/>:m==='practice'?<Practice tests={p.tests||[]}/>:m==='files'?<Files {...p}/>:<Essays {...p}/>}</div>}
 
+
+function Composer({busy,isS,onText,onFiles,onMic}){
+  const [txt,setTxt]=useState('');
+  const go=()=>{const t=txt.trim();if(!t||busy)return;onText(t);setTxt('')};
+  const rb='w-10 h-10 rounded-full grid place-items-center shrink-0 transition active:scale-95';
+  const soft=`${rb} bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/20 cursor-pointer`;
+  return <div className="p-3 border-t border-slate-200 dark:border-white/10 flex items-center gap-2">
+    <label className={soft} title={tr("Send photo")}><I n="image" c="w-5 h-5" sw={1.75}/><input type="file" multiple accept="image/*" className="hidden" onChange={e=>{onFiles('image',[...e.target.files]);e.target.value=''}}/></label>
+    <label className={soft} title={tr("Send file")}><I n="clip" c="w-5 h-5" sw={1.75}/><input type="file" multiple accept=".pdf,.txt,.md,.csv,.json" className="hidden" onChange={e=>{onFiles('file',[...e.target.files]);e.target.value=''}}/></label>
+    <input className={inp+' !rounded-full !px-4'} placeholder={busy?tr('Sending…'):isS?tr('Save a note…'):tr('Write a message…')} value={txt} onChange={e=>setTxt(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()}/>
+    {txt.trim()?<button onClick={go} disabled={busy} className={`${rb} bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-50`}><I n="send" c="w-5 h-5" sw={1.75}/></button>
+    :<button onClick={onMic} disabled={busy} className={`${rb} bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-50`} title={tr("Record voice message")}><I n="mic" c="w-5 h-5" sw={1.75}/></button>}
+  </div>;
+}
+
 function Messages({conn,active,setActive,msgs,send,myId,saved,saveItem,delSaved,flash,startCall}){
-  const [txt,setTxt]=useState(''),[busy,setBusy]=useState(false),[view,setView]=useState(null),[recOn,setRecOn]=useState(false),[sec,setSec]=useState(0),end=useRef(),mrRef=useRef(),chunks=useRef([]),cancel=useRef(false),t0=useRef(0),tm=useRef();
+  const [busy,setBusy]=useState(false),[view,setView]=useState(null),[recOn,setRecOn]=useState(false),[sec,setSec]=useState(0),end=useRef(),mrRef=useRef(),chunks=useRef([]),cancel=useRef(false),t0=useRef(0),tm=useRef();
   const isS=active==='saved';
   const list=PEOPLE.filter(p=>conn.has(p.id)||msgs.some(x=>x.from===p.id&&x.to===myId)),cur=isS?{name:tr('Saved messages'),saved:true}:PEOPLE.find(p=>p.id===active);
   const thread=id=>msgs.filter(x=>(x.from===myId&&x.to===id)||(x.from===id&&x.to===myId)).sort((a,b)=>a.ts-b.ts);
-  const m=isS?saved.map(x=>({...x,from:myId})).sort((a,b)=>a.ts-b.ts):active?thread(active):[];
+  const m=useMemo(()=>isS?saved.map(x=>({...x,from:myId})).sort((a,b)=>a.ts-b.ts):active?thread(active):[],[msgs,saved,active,myId]);
   useEffect(()=>{end.current&&end.current.scrollIntoView({behavior:'smooth'})},[m.length,active]);
   useEffect(()=>()=>{cancel.current=true;clearInterval(tm.current);try{mrRef.current&&mrRef.current.state!=='inactive'&&mrRef.current.stop()}catch(e){}},[]);
   const fmt=n=>`${Math.floor((n||0)/60)}:${String((n||0)%60).padStart(2,'0')}`;
@@ -299,14 +521,15 @@ function Messages({conn,active,setActive,msgs,send,myId,saved,saveItem,delSaved,
   const upload=async b=>{const as=await claude.use('assets');if(!as)throw new Error('uploads are not available for your account');return (await as.upload(b)).url};
   const dlFile=async(url,fn)=>{try{const d=await claude.use('downloads');if(!d)throw 0;const b=await (await fetch(url)).blob();await d.save({filename:fn||'file',data:b})}catch(e){flash(tr('Download is not available right now.'))}};
   const deliver=async o=>{setBusy(true);try{let extra={};if(o.blob){const url=await upload(o.blob);extra={kind:o.kind,url,fn:o.fn||'',dur:o.dur||0}}if(isS)await saveItem(o.t||'',extra);else await send(active,o.t||'',extra)}catch(e){flash(tr('Could not send')+': '+((e&&e.message)||'upload failed'))}setBusy(false)};
-  const go=()=>{if(!txt.trim()||busy)return;deliver({t:txt.trim()});setTxt('')};
-  const pickFiles=kind=>e=>{[...e.target.files].forEach(f=>deliver({kind,blob:f,fn:f.name}));e.target.value=''};
+  const sendText=t=>{if(!busy)deliver({t})};
+  const sendFiles=(kind,files)=>files.forEach(f=>deliver({kind,blob:f,fn:f.name}));
   const startRec=async()=>{try{const st=await navigator.mediaDevices.getUserMedia({audio:true});const mr=new MediaRecorder(st);chunks.current=[];cancel.current=false;mr.ondataavailable=e=>{e.data&&e.data.size&&chunks.current.push(e.data)};mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());clearInterval(tm.current);setRecOn(false);const dur=Math.round((Date.now()-t0.current)/1000);if(cancel.current||dur<1||!chunks.current.length)return;const mime=(mr.mimeType||'audio/webm').includes('mp4')?'video/mp4':'video/webm';deliver({kind:'voice',blob:new Blob(chunks.current,{type:mime}),dur,fn:'voice-message'})};mr.start();mrRef.current=mr;t0.current=Date.now();setSec(0);tm.current=setInterval(()=>setSec(Math.round((Date.now()-t0.current)/1000)),500);setRecOn(true)}catch(e){flash(tr('Microphone is not available. Allow microphone access for this page and try again.'))}};
   const stopRec=ok=>{cancel.current=!ok;try{mrRef.current&&mrRef.current.state!=='inactive'&&mrRef.current.stop()}catch(e){}};
   const bub=(x,i)=>{const mine=x.from===myId;
-    const body=x.kind==='image'?<img src={x.url} alt="" onClick={()=>setView(x.url)} className="rounded-xl max-w-[220px] sm:max-w-[280px] cursor-zoom-in"/>:x.kind==='voice'?<div className="flex items-center gap-2"><audio controls preload="metadata" src={x.url} className="h-10 w-48 max-w-full"/><span className="text-xs opacity-70">{fmt(x.dur)}</span></div>:x.kind==='file'?<button onClick={()=>dlFile(x.url,x.fn)} className="flex items-center gap-2 text-left"><I n="file" c="w-5 h-5 shrink-0"/><span className="text-sm underline break-all">{x.fn}</span></button>:null;
+    const body=x.kind==='image'?<img src={x.url} alt="" loading="lazy" onClick={()=>setView(x.url)} className="rounded-xl max-w-[220px] sm:max-w-[280px] cursor-zoom-in"/>:x.kind==='voice'?<div className="flex items-center gap-2"><audio controls preload="none" src={x.url} className="h-10 w-48 max-w-full"/><span className="text-xs opacity-70">{fmt(x.dur)}</span></div>:x.kind==='file'?<button onClick={()=>dlFile(x.url,x.fn)} className="flex items-center gap-2 text-left"><I n="file" c="w-5 h-5 shrink-0"/><span className="text-sm underline break-all">{x.fn}</span></button>:null;
     const act=<span className="opacity-60 sm:opacity-0 sm:group-hover:opacity-100 transition flex gap-1 text-slate-400 shrink-0">{isS?<button title={tr("Delete")} onClick={()=>delSaved(x.id)}><I n="trash" c="w-4 h-4"/></button>:<button title={tr("Save to Saved messages")} onClick={()=>saveItem(x.t||'',{kind:x.kind,url:x.url,fn:x.fn,dur:x.dur})}><I n="bookmark" c="w-4 h-4"/></button>}</span>;
     return <div key={x.id||i} className={`group flex items-end gap-1.5 ${mine?'justify-end':''}`}>{mine&&act}<div className={`pop max-w-[78%] px-3.5 py-2.5 rounded-2xl text-sm ${mine?'bg-violet-600 text-white rounded-br-md':'bg-slate-100 dark:bg-white/10 rounded-bl-md'}`}>{body}{x.t&&<p className={`whitespace-pre-line break-words ${body?'mt-1.5':''}`}>{x.t}</p>}</div>{!mine&&act}</div>};
+  const items=useMemo(()=>m.map(bub),[m,myId,isS]);
   const row=(id,av,name,sub)=><button key={id} onClick={()=>setActive(id)} className={`w-full flex gap-3 p-4 text-left hover:bg-slate-100 dark:hover:bg-white/5 transition ${active===id?'bg-violet-50 dark:bg-violet-500/10':''}`}>{av}<div className="min-w-0"><p className="font-semibold text-sm">{name}</p><p className="text-xs text-slate-500 truncate">{sub}</p></div></button>;
   const sv=(c='w-11 h-11')=><div className={`${c} rounded-2xl grid place-items-center text-white shrink-0 bg-violet-600 shadow-lg`}><I n="bookmark" c="w-5 h-5"/></div>;
   const lastS=saved.slice().sort((a,b)=>b.ts-a.ts)[0];
@@ -314,12 +537,10 @@ function Messages({conn,active,setActive,msgs,send,myId,saved,saveItem,delSaved,
     <Head t="Messages" s="Chat, send photos, files and voice messages, and keep notes in Saved messages."/>
     <div className={`${card} hover:translate-y-0 overflow-hidden grid md:grid-cols-[280px_1fr] h-[68vh] up`}>
       <div className={`border-r border-slate-200 dark:border-white/10 overflow-y-auto ${cur?'hidden md:block':''}`}>{row('saved',sv(),tr('Saved messages'),lastS?label(lastS):tr('Keep notes, photos, files and voice'))}{list.map(p=>{const l=thread(p.id).slice(-1)[0];return row(p.id,<Av p={p} s="w-11 h-11"/>,p.name,l?label(l):tr('Say hello'))})}{!list.length&&<p className="p-4 text-xs text-slate-500">{tr("Connect with someone in Discover to start a chat.")}</p>}</div>
-      {cur?<div className="flex flex-col min-h-0"><div className="flex items-center gap-3 p-4 border-b border-slate-200 dark:border-white/10"><button className="md:hidden text-sm text-violet-600" onClick={()=>setActive(null)}>←</button>{cur.saved?sv('w-10 h-10'):<Av p={cur} s="w-10 h-10"/>}<div><p className="font-semibold text-sm">{cur.name}</p><p className="text-xs text-slate-500">{cur.saved?tr('Only you can see this'):mj(cur.major)}</p></div>{!cur.saved&&<div className="ml-auto flex gap-1"><button onClick={()=>startCall(cur.id,false)} className="p-2.5 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10" title={tr('Voice call')}><I n="phone" c="w-5 h-5"/></button><button onClick={()=>startCall(cur.id,true)} className="p-2.5 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10" title={tr('Video call')}><I n="video" c="w-5 h-5"/></button></div>}</div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">{!m.length&&<p className="text-center text-sm text-slate-500 pt-10">{isS?tr('Save anything you need here: notes, links, photos, files and voice messages.'):tr('No messages yet.')}</p>}{m.map(bub)}<div ref={end}/></div>
-        {recOn?<div className="p-3 border-t border-slate-200 dark:border-white/10 flex items-center gap-3"><span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"/><span className="text-sm font-semibold tabular-nums">{fmt(sec)}</span><span className="text-sm text-slate-500 flex-1">{tr("Recording…")}</span><button onClick={()=>stopRec(false)} className={ghost+' !px-3'} title={tr("Cancel")}><I n="trash" c="w-4 h-4"/></button><button onClick={()=>stopRec(true)} className={prim+' !px-3.5'} title={tr("Send voice")}><I n="send" c="w-4 h-4"/></button></div>
-        :<div className="p-3 border-t border-slate-200 dark:border-white/10 flex items-center gap-2"><label className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer" title={tr("Send photo")}><I n="image" c="w-5 h-5"/><input type="file" multiple accept="image/*" className="hidden" onChange={pickFiles('image')}/></label><label className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer" title={tr("Send file")}><I n="clip" c="w-5 h-5"/><input type="file" multiple accept=".pdf,.txt,.md,.csv,.json" className="hidden" onChange={pickFiles('file')}/></label>
-          <input className={inp} placeholder={busy?tr('Sending…'):isS?tr('Save a note…'):tr('Write a message…')} value={txt} onChange={e=>setTxt(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()}/>
-          {txt.trim()?<button onClick={go} disabled={busy} className={prim+' !px-3.5'}><I n="send" c="w-4 h-4"/></button>:<button onClick={startRec} disabled={busy} className={prim+' !px-3.5'} title={tr("Record voice message")}><I n="mic" c="w-4 h-4"/></button>}</div>}
+      {cur?<div className="flex flex-col min-h-0"><div className="flex items-center gap-3 p-4 border-b border-slate-200 dark:border-white/10"><button className="md:hidden text-sm text-violet-600" onClick={()=>setActive(null)}>←</button>{cur.saved?sv('w-10 h-10'):<Av p={cur} s="w-10 h-10"/>}<div><p className="font-semibold text-sm">{cur.name}</p><p className="text-xs text-slate-500">{cur.saved?tr('Only you can see this'):mj(cur.major)}</p></div>{!cur.saved&&<div className="ml-auto flex gap-1"><button onClick={()=>startCall(cur.id,false)} className="w-10 h-10 rounded-full grid place-items-center bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 transition active:scale-95" title={tr('Voice call')}><I n="phone" c="w-5 h-5" sw={1.75}/></button><button onClick={()=>startCall(cur.id,true)} className="w-10 h-10 rounded-full grid place-items-center bg-violet-100 text-violet-700 hover:bg-violet-200 dark:bg-violet-500/15 dark:text-violet-300 transition active:scale-95" title={tr('Video call')}><I n="video" c="w-5 h-5" sw={1.75}/></button></div>}</div>
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">{!m.length&&<p className="text-center text-sm text-slate-500 pt-10">{isS?tr('Save anything you need here: notes, links, photos, files and voice messages.'):tr('No messages yet.')}</p>}{items}<div ref={end}/></div>
+        {recOn?<div className="p-3 border-t border-slate-200 dark:border-white/10 flex items-center gap-3"><span className="flex items-end gap-0.5 h-6">{[0,1,2,3,4,5].map(i=><i key={i} className="w-1 rounded-full bg-red-500 animate-pulse" style={{height:`${35+((i*41)%65)}%`,animationDelay:`${i*110}ms`}}/>)}</span><span className="text-sm font-semibold tabular-nums">{fmt(sec)}</span><span className="text-sm text-slate-500 flex-1">{tr("Recording…")}</span><button onClick={()=>stopRec(false)} className="w-10 h-10 rounded-full grid place-items-center bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/20" title={tr("Cancel")}><I n="trash" c="w-5 h-5" sw={1.75}/></button><button onClick={()=>stopRec(true)} className="w-10 h-10 rounded-full grid place-items-center bg-violet-600 text-white hover:bg-violet-700" title={tr("Send voice")}><I n="send" c="w-5 h-5" sw={1.75}/></button></div>
+        :<Composer busy={busy} isS={isS} onText={sendText} onFiles={sendFiles} onMic={startRec}/>}
       </div>:<div className="hidden md:grid place-items-center text-slate-500 text-sm">{tr("Select a conversation")}</div>}
     </div>
     {view&&<Modal onClose={()=>setView(null)}><img src={view} alt="" className="w-full rounded-xl mt-4"/></Modal>}
@@ -330,16 +551,17 @@ const L=({l,children})=><label className="block text-sm font-medium">{tr(l)}<div
 function Profile({me,setMe}){
   const [f,setF]=useState(me),[ok,setOk]=useState(false),dirty=useRef(false),set=k=>e=>{dirty.current=true;setF({...f,[k]:e.target.value});setOk(false)};
   useEffect(()=>{if(!dirty.current)setF(me)},[me]);
+  const need=[!(f.name||'').trim()&&'Full name',!(+f.age>=10)&&'Age',!(f.major||'').trim()&&'Major / field of study',(f.type==='School'?!(f.target||'').trim():!(f.inst||'').trim())&&(f.type==='School'?'Target university':'Educational institution')].filter(Boolean);
   const pick=e=>{const file=e.target.files[0];if(!file)return;const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=192;const m=Math.min(img.width,img.height);c.getContext('2d').drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,192,192);dirty.current=true;setF(v=>({...v,photo:c.toDataURL('image/jpeg',.82)}));setOk(false);URL.revokeObjectURL(u)};img.src=u};
 
   return <div className="grid lg:grid-cols-[320px_1fr] gap-6">
-    <div className={`${card} p-6 text-center h-fit up`}><Av p={{name:f.name,hue:265,photo:f.photo}} s="w-24 h-24 !rounded-2xl text-2xl" x="mx-auto"/><div className="flex gap-2 justify-center mt-4"><label className={ghost+' cursor-pointer !py-2 !px-3'}>{f.photo?tr('Change photo'):tr('Upload photo')}<input type="file" accept="image/*" className="hidden" onChange={pick}/></label>{f.photo&&<button className={ghost+' !py-2 !px-3'} onClick={()=>{dirty.current=true;setF({...f,photo:''});setOk(false)}}>{tr("Remove")}</button>}</div><h3 className="text-xl font-extrabold mt-4">{f.name}</h3><p className="text-sm text-slate-500">{f.major} · {f.age} yrs</p><p className="text-xs text-slate-500 mt-1">{f.inst}</p>
+    <div className={`${card} p-6 text-center h-fit up`}><Av p={{name:f.name,hue:265,photo:f.photo}} s="w-24 h-24 !rounded-2xl text-2xl" x="mx-auto"/><div className="flex gap-2 justify-center mt-4"><label className={ghost+' cursor-pointer !py-2 !px-3'}>{f.photo?tr('Change photo'):tr('Upload photo')}<input type="file" accept="image/*" className="hidden" onChange={pick}/></label>{f.photo&&<button className={ghost+' !py-2 !px-3'} onClick={()=>{dirty.current=true;setF({...f,photo:''});setOk(false)}}>{tr("Remove")}</button>}</div><h3 className="text-xl font-extrabold mt-4">{f.name}</h3><p className="text-sm text-slate-500">{f.major} · {f.age} yrs</p><p className="text-xs text-slate-500 mt-1">{f.type==='School'?(f.target?tr('Target university')+': '+f.target:''):f.inst}</p>
       <div className="flex flex-wrap gap-1.5 justify-center mt-4">{f.skills.split(',').filter(s=>s.trim()).map(s=><Chip key={s}>{s.trim()}</Chip>)}</div></div>
     <div className={`${card} hover:translate-y-0 p-6 space-y-4 up`}><h3 className="text-xl font-extrabold">{tr("Edit profile")}</h3>
-      <div className="grid sm:grid-cols-2 gap-4"><L l="Full name"><input className={inp} value={f.name} onChange={set('name')}/></L><L l="Age"><input type="number" min="13" max="60" className={inp} value={f.age} onChange={set('age')}/></L>
-        <L l="Major / field of study"><select className={inp} value={MAJORS.some(m=>m.en===f.major)?f.major:(f.major?'__other':'')} onChange={e=>{dirty.current=true;setOk(false);setF({...f,major:e.target.value==='__other'?' ':e.target.value})}}><option value="">{tr('Choose…')}</option>{MAJORS.map(m=><option key={m.en} value={m.en}>{L3(m.name)}</option>)}<option value="__other">{tr('Other')}</option></select>{f.major&&!MAJORS.some(m=>m.en===f.major)&&<input className={inp+' mt-2'} placeholder={tr('Your major')} value={f.major.trim()} onChange={set('major')}/>}</L><L l="Educational institution"><input list="ins" className={inp} value={f.inst} onChange={set('inst')}/><datalist id="ins">{INST.map(i=><option key={i.n} value={i.n}/>)}</datalist></L></div>
-      <L l="Institution type"><select className={inp} value={f.type||'University'} onChange={set('type')}><option value="University">{tr("University")}</option><option value="School">{tr("School")}</option></select></L><L l="I’m looking for"><select className={inp} value={f.mode} onChange={set('mode')}><option value="partner">{tr("Study partner")}</option><option value="cofounder">{tr("Startup co-founder")}</option><option value="both">{tr("Both")}</option></select></L><L l="Skills (comma separated)"><input className={inp} value={f.skills} onChange={set('skills')}/></L><L l="Goals"><textarea rows="3" className={inp} value={f.goal} onChange={set('goal')}/></L>
-      <button className={prim} disabled={!(f.name||'').trim()} onClick={async()=>{const r=await setMe(f);setOk(r!==false);if(r!==false)dirty.current=false}}>{ok?<><I n="check" c="w-4 h-4"/>{tr("Saved")}</>:tr('Save changes')}</button>{!(f.name||'').trim()&&<span className="ml-3 text-xs text-amber-600 dark:text-amber-400">{tr("Enter your name to save.")}</span>}</div></div>;
+      <div className="grid sm:grid-cols-2 gap-4"><L l="Full name"><input className={inp} value={f.name} onChange={set('name')}/></L><L l="Age"><input type="number" min="13" max="60" className={inp} value={f.age} onChange={set('age')}/></L><L l="Institution type"><select className={inp} value={f.type||'University'} onChange={set('type')}><option value="University">{tr("University")}</option><option value="School">{tr("School")}</option></select></L>
+        <L l="Major / field of study"><select className={inp} value={MAJORS.some(m=>m.en===f.major)?f.major:(f.major?'__other':'')} onChange={e=>{dirty.current=true;setOk(false);setF({...f,major:e.target.value==='__other'?' ':e.target.value})}}><option value="">{tr('Choose…')}</option>{MAJORS.map(m=><option key={m.en} value={m.en}>{L3(m.name)}</option>)}<option value="__other">{tr('Other')}</option></select>{f.major&&!MAJORS.some(m=>m.en===f.major)&&<input className={inp+' mt-2'} placeholder={tr('Your major')} value={f.major.trim()} onChange={set('major')}/>}</L>{f.type==='School'?<L l="Target university"><input list="ins" className={inp} placeholder={tr('Your dream university')} value={f.target||''} onChange={set('target')}/><datalist id="ins">{INST.map(i=><option key={i.n} value={i.n}/>)}</datalist></L>:<L l="Educational institution"><input list="ins" className={inp} value={f.inst} onChange={set('inst')}/><datalist id="ins">{INST.map(i=><option key={i.n} value={i.n}/>)}</datalist></L>}</div>
+      <L l="I’m looking for"><select className={inp} value={f.mode} onChange={set('mode')}><option value="partner">{tr("Study partner")}</option><option value="cofounder">{tr("Startup co-founder")}</option><option value="both">{tr("Both")}</option></select></L><L l="Skills (comma separated)"><input className={inp} value={f.skills} onChange={set('skills')}/></L><L l="Goals"><textarea rows="3" className={inp} value={f.goal} onChange={set('goal')}/></L>
+      <button className={prim} disabled={need.length>0} onClick={async()=>{const r=await setMe(f);setOk(r!==false);if(r!==false)dirty.current=false}}>{ok?<><I n="check" c="w-4 h-4"/>{tr("Saved")}</>:tr('Save changes')}</button>{need.length>0&&<p className="mt-3 text-xs text-amber-600 dark:text-amber-400">{tr('Fill in to create your profile')}: {need.map(x=>tr(x)).join(', ')}</p>}</div></div>;
 }
 
 const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -347,6 +569,8 @@ const LOC={en:'en-GB',ru:'ru-RU',uz:'uz-UZ'};
 const pname=id=>(PEOPLE.find(p=>p.id===id)||{}).name||tr('Someone');
 
 function Calendar({myId,friends,deadlines,sessions,addDeadline,toggleDeadline,delDeadline,book,answer,cancel,call}){
+  const [intro,setIntro]=useState(()=>{try{return !localStorage.getItem('sm-cal-intro')}catch(e){return false}});
+  const closeIntro=()=>{try{localStorage.setItem('sm-cal-intro','1')}catch(e){}setIntro(false)};
   const [cur,setCur]=useState(()=>{const d=new Date();d.setDate(1);return d}),[day,setDay]=useState(iso(new Date())),[modal,setModal]=useState(null),[f,setF]=useState({title:'',date:iso(new Date()),time:'16:00',to:''});
   const y=cur.getFullYear(),m=cur.getMonth(),off=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate();
   const cells=[...Array(off).fill(null),...Array.from({length:dim},(_,i)=>i+1)];
@@ -378,6 +602,7 @@ function Calendar({myId,friends,deadlines,sessions,addDeadline,toggleDeadline,de
         <div className="flex gap-2"><button className={prim+' flex-1'} onClick={()=>open('deadline')}><I n="plus" c="w-4 h-4"/>{tr('Add deadline')}</button><button className={ghost+' flex-1'} onClick={()=>open('session')}><I n="calendar" c="w-4 h-4"/>{tr('Book a session')}</button></div>
       </div>
     </div>
+    {intro&&<Modal onClose={closeIntro}><h3 className="font-display text-xl">{tr('How the calendar works')}</h3><ol className="mt-4 space-y-3 text-sm text-slate-600 dark:text-slate-300">{['Add a deadline for anything with a date: exam registration, an application, a project.','Book a session with a friend. They get an invitation, and it shows in both calendars once they accept.','On the day, press Join call to talk without leaving Studymatch.'].map((x,i)=><li key={i} className="flex gap-3"><span className="w-6 h-6 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300 grid place-items-center text-xs font-semibold shrink-0">{i+1}</span>{tr(x)}</li>)}</ol><button className={prim+' w-full mt-6'} onClick={closeIntro}>{tr('Got it')}</button></Modal>}
     {modal==='deadline'&&<Modal onClose={()=>setModal(null)}><h3 className="font-display text-xl mb-4">{tr('Add deadline')}</h3><div className="space-y-3"><input className={inp} placeholder={tr('What is due? (e.g. IELTS registration)')} value={f.title} onChange={e=>setF({...f,title:e.target.value})}/><input type="date" className={inp} value={f.date} onChange={e=>setF({...f,date:e.target.value})}/><button className={prim+' w-full'} disabled={!f.title.trim()||!f.date} onClick={()=>{addDeadline(f.title.trim(),f.date);setDay(f.date);setModal(null)}}>{tr('Save')}</button></div></Modal>}
     {modal==='session'&&<Modal onClose={()=>setModal(null)}><h3 className="font-display text-xl mb-4">{tr('Book a session')}</h3>
       {!fl.length?<p className="text-sm text-slate-500">{tr('You can book sessions with friends. Send a connection request in Discover first.')}</p>:<div className="space-y-3">
@@ -390,15 +615,15 @@ function Calendar({myId,friends,deadlines,sessions,addDeadline,toggleDeadline,de
 
 function CallLayer({rt,myId,meName,cmd,flash}){
   const [st,setSt]=useState(null),[mic,setMic]=useState(true),[cam,setCam]=useState(true),[sec,setSec]=useState(0);
-  const pc=useRef(null),local=useRef(null),pend=useRef([]),stRef=useRef(null),lv=useRef(null),rv=useRef(null),tm=useRef(),to=useRef(),h=useRef();
+  const [blocked,setBlocked]=useState(false),ra=useRef(null),rs=useRef(null),pc=useRef(null),local=useRef(null),pend=useRef([]),stRef=useRef(null),lv=useRef(null),rv=useRef(null),tm=useRef(),to=useRef(),h=useRef();
   stRef.current=st;
   const sig=(peer,m)=>rt&&rt.send('u:'+peer,{...m,from:myId,name:meName}).catch(()=>{});
-  const cleanup=()=>{clearInterval(tm.current);clearTimeout(to.current);try{pc.current&&pc.current.close()}catch(e){}pc.current=null;if(local.current){local.current.getTracks().forEach(t=>t.stop());local.current=null}pend.current=[];setSt(null);setSec(0);setMic(true);setCam(true)};
+  const cleanup=()=>{clearInterval(tm.current);clearTimeout(to.current);try{pc.current&&pc.current.close()}catch(e){}pc.current=null;if(local.current){local.current.getTracks().forEach(t=>t.stop());local.current=null}pend.current=[];rs.current=null;if(ra.current)ra.current.srcObject=null;setBlocked(false);setSt(null);setSec(0);setMic(true);setCam(true)};
   const media=async v=>{local.current=await navigator.mediaDevices.getUserMedia({audio:true,video:v});return local.current};
   const mkpc=peer=>{const p=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});local.current.getTracks().forEach(t=>p.addTrack(t,local.current));
     p.onicecandidate=e=>{if(e.candidate)sig(peer,{t:'ice',c:e.candidate})};
-    p.ontrack=e=>{if(rv.current)rv.current.srcObject=e.streams[0]};
-    p.onconnectionstatechange=()=>{if(p.connectionState==='connected'){setSt(s=>s&&{...s,status:'active'});clearTimeout(to.current);clearInterval(tm.current);const t0=Date.now();tm.current=setInterval(()=>setSec(Math.round((Date.now()-t0)/1000)),1000)}else if(p.connectionState==='failed'){flash(tr('Call failed. Your network may block direct calls.'));cleanup()}};
+    p.ontrack=e=>{const ms=rs.current||(rs.current=new MediaStream());ms.addTrack(e.track);if(rv.current)rv.current.srcObject=ms;if(ra.current){ra.current.srcObject=ms;const pl=ra.current.play();if(pl&&pl.catch)pl.catch(()=>setBlocked(true))}};
+    p.onconnectionstatechange=()=>{if(p.connectionState==='connected'){setSt(s=>s&&{...s,status:'active'});if(ra.current&&ra.current.srcObject){const pl=ra.current.play();if(pl&&pl.catch)pl.catch(()=>setBlocked(true))}clearTimeout(to.current);clearInterval(tm.current);const t0=Date.now();tm.current=setInterval(()=>setSec(Math.round((Date.now()-t0)/1000)),1000)}else if(p.connectionState==='failed'){flash(tr('Call failed. Your network may block direct calls.'));cleanup()}};
     pc.current=p;return p};
   const start=async(peer,v)=>{
     if(!rt)return flash(tr('Calls need the online version of Studymatch.'));
@@ -428,13 +653,14 @@ function CallLayer({rt,myId,meName,cmd,flash}){
   const label=st.status==='ringing'?tr('Incoming call'):st.status==='calling'?tr('Calling…'):st.status==='connecting'?tr('Connecting…'):fmt(sec);
   const showV=st.video&&st.status==='active';
   return <div className="fixed inset-0 z-[70] bg-slate-950 text-white flex flex-col">
-    <video ref={rv} autoPlay playsInline className={showV?'absolute inset-0 w-full h-full object-cover':'hidden'}/>
+    <audio ref={ra} autoPlay playsInline/><video ref={rv} autoPlay playsInline muted className={showV?'absolute inset-0 w-full h-full object-cover':'hidden'}/>
     <div className="relative flex-1 grid place-items-center text-center p-6"><div><div className="w-24 h-24 mx-auto rounded-2xl grid place-items-center text-3xl font-semibold bg-violet-600">{ini(st.name)}</div><h3 className="font-display text-2xl mt-4">{st.name}</h3><p className="text-white/70 mt-1">{label}</p>{st.video&&<p className="text-xs text-white/50 mt-1">{tr('Video call')}</p>}</div></div>
     {st.video&&<video ref={lv} autoPlay playsInline muted className="absolute right-4 top-4 w-28 sm:w-40 rounded-xl border border-white/20 bg-slate-900 -scale-x-100"/>}
-    <div className="relative p-6 flex justify-center gap-4" style={{paddingBottom:'calc(1.5rem + env(safe-area-inset-bottom,0px))'}}>
-      {st.status==='ringing'?<><button onClick={accept} className={`${btn} bg-emerald-600 hover:bg-emerald-700 text-white !px-6`}><I n="phone" c="w-5 h-5"/>{tr('Accept')}</button><button onClick={hang} className={`${btn} bg-red-600 hover:bg-red-700 text-white !px-6`}>{tr('Decline')}</button></>
-      :<>{st.status!=='calling'&&<><button onClick={()=>{local.current&&local.current.getAudioTracks().forEach(t=>t.enabled=!mic);setMic(!mic)}} className={`${btn} ${mic?'bg-white/15':'bg-white text-slate-900'}`}><I n="mic" c="w-5 h-5"/>{mic?tr('Mute'):tr('Unmute')}</button>{st.video&&<button onClick={()=>{local.current&&local.current.getVideoTracks().forEach(t=>t.enabled=!cam);setCam(!cam)}} className={`${btn} ${cam?'bg-white/15':'bg-white text-slate-900'}`}><I n="video" c="w-5 h-5"/>{cam?tr('Camera off'):tr('Camera on')}</button>}</>}
-        <button onClick={hang} className={`${btn} bg-red-600 hover:bg-red-700 text-white !px-6`}>{st.status==='calling'?tr('Cancel'):tr('End call')}</button></>}
+    <div className="relative p-6 flex justify-center items-center gap-5" style={{paddingBottom:'calc(1.5rem + env(safe-area-inset-bottom,0px))'}}>
+      {st.status==='ringing'?<><button onClick={hang} className="w-16 h-16 rounded-full grid place-items-center bg-red-600 hover:bg-red-700 text-white transition active:scale-95" title={tr('Decline')}><I n="phone" c="w-7 h-7 rotate-[135deg]" sw={1.75}/></button><button onClick={accept} className="w-16 h-16 rounded-full grid place-items-center bg-emerald-500 hover:bg-emerald-600 text-white animate-pulse transition active:scale-95" title={tr('Accept')}><I n="phone" c="w-7 h-7" sw={1.75}/></button></>
+      :<>{st.status!=='calling'&&<><button onClick={()=>{local.current&&local.current.getAudioTracks().forEach(t=>t.enabled=!mic);setMic(!mic)}} className={`w-14 h-14 rounded-full grid place-items-center transition active:scale-95 ${mic?'bg-white/15 hover:bg-white/25':'bg-white text-slate-900'}`} title={mic?tr('Mute'):tr('Unmute')}><I n="mic" c="w-6 h-6" sw={1.75}/></button>{st.video&&<button onClick={()=>{local.current&&local.current.getVideoTracks().forEach(t=>t.enabled=!cam);setCam(!cam)}} className={`w-14 h-14 rounded-full grid place-items-center transition active:scale-95 ${cam?'bg-white/15 hover:bg-white/25':'bg-white text-slate-900'}`} title={cam?tr('Camera off'):tr('Camera on')}><I n="video" c="w-6 h-6" sw={1.75}/></button>}</>}
+        <button onClick={hang} className="w-16 h-16 rounded-full grid place-items-center bg-red-600 hover:bg-red-700 text-white transition active:scale-95" title={st.status==='calling'?tr('Cancel'):tr('End call')}><I n="phone" c="w-7 h-7 rotate-[135deg]" sw={1.75}/></button></>}
+      {blocked&&<button onClick={()=>{const pl=ra.current&&ra.current.play();if(pl&&pl.then)pl.then(()=>setBlocked(false)).catch(()=>{})}} className={`${btn} bg-white text-slate-900 absolute -top-4`}>{tr('Tap to enable sound')}</button>}
     </div></div>;
 }
 
@@ -519,7 +745,7 @@ function TestBuilder({db,onDone}){
 const ARow=({children,onDel})=><div className="flex items-center gap-3 py-2.5 border-b border-slate-200 dark:border-white/10 text-sm"><div className="min-w-0 flex-1">{children}</div>{onDel}</div>;
 const AdminShell=({children,ok,onExit,out})=><div className="min-h-screen max-w-4xl mx-auto px-4 py-8"><div className="flex items-center justify-between mb-6"><h1 className="text-2xl">Studymatch admin</h1><div className="flex gap-2"><button className={ghost+' !py-2'} onClick={()=>{location.hash='';onExit()}}>← Back to site</button>{ok&&<button className={ghost+' !py-2'} onClick={out}>Sign out</button>}</div></div>{children}</div>;
 function Admin({db,people,mats,ess,tests,uinfo,onExit}){
-  const [ok,setOk]=useState(null),[em,setEm]=useState(''),[pw,setPw]=useState(''),[err,setErr]=useState(''),[sec,setSec]=useState('members'),[bans,setBans]=useState([]),[uni,setUni]=useState(INST[0].slug),[form,setForm]=useState({}),[saved,setSaved]=useState(''),[building,setBuilding]=useState(false);
+  const [ok,setOk]=useState(null),[em,setEm]=useState(''),[pw,setPw]=useState(''),[err,setErr]=useState(''),[sec,setSec]=useState('members'),[bans,setBans]=useState([]),[uni,setUni]=useState(INST[0].slug),[form,setForm]=useState({}),[saved,setSaved]=useState(''),[building,setBuilding]=useState(false),[bulk,setBulk]=useState(''),[bulkMsg,setBulkMsg]=useState('');
   const api=useRef(null);
   useEffect(()=>{(async()=>{try{api.current=await claude.use('admin');setOk(api.current?await api.current.isAdmin():false)}catch(e){setOk(false)}})()},[]);
   useEffect(()=>{if(ok&&sec==='members')api.current.bans().then(setBans).catch(()=>{})},[ok,sec]);
@@ -529,6 +755,7 @@ function Admin({db,people,mats,ess,tests,uinfo,onExit}){
   const del=async(col,id)=>{if(!confirm('Delete this?'))return;try{await db.collection(col).doc(id).delete()}catch(e){alert('Failed: '+(e.message||e))}};
   const ban=async p=>{if(!confirm(`Ban ${p.name} and remove everything they posted?`))return;try{await api.current.ban(p.id);api.current.bans().then(setBans)}catch(e){alert('Failed: '+(e.message||e))}};
   const unban=async id=>{try{await api.current.unban(id);api.current.bans().then(setBans)}catch(e){alert('Failed: '+(e.message||e))}};
+  const bulkImport=async()=>{let n=0;const bad=[];for(const line of bulk.split('\n')){const p=line.split('|').map(x=>x.trim());if(p.length<2||!p[0])continue;const k=p[0].toLowerCase();const u=INST.find(i=>i.n.toLowerCase()===k)||INST.find(i=>i.n.toLowerCase().includes(k));if(!u){bad.push(p[0]);continue}const [,ielts,toefl,sat,gpa,deadline,scholarship,how,url]=p;try{await db.collection('uni_info').doc(u.slug).set({ielts:ielts||'',toefl:toefl||'',sat:sat||'',gpa:gpa||'',deadline:deadline||'',scholarship:scholarship||'',how:how||'',url:url||''});n++}catch(e){bad.push(p[0])}}setBulkMsg(`Imported ${n}.`+(bad.length?' Not found or failed: '+bad.join('; '):''))};
   const saveUni=async()=>{try{await db.collection('uni_info').doc(uni).set(form);setSaved('Saved')}catch(e){setSaved('Failed: '+(e.message||e))}};
   if(ok===null)return <AdminShell ok={ok} onExit={onExit} out={out}><p className="text-slate-500">Loading…</p></AdminShell>;
   if(!ok)return <AdminShell ok={ok} onExit={onExit} out={out}><div className={`${card} p-6 max-w-sm`}><h2 className="text-xl mb-4">Admin sign-in</h2>
@@ -549,22 +776,44 @@ function Admin({db,people,mats,ess,tests,uinfo,onExit}){
       <div className="grid sm:grid-cols-2 gap-3">{fld('ielts','IELTS','e.g. 7.0 overall, no band below 6.5')}{fld('toefl','TOEFL','e.g. 100')}{fld('sat','SAT / ACT','e.g. SAT required, middle 50%: 1500–1570')}{fld('gpa','GPA','e.g. 3.9+ / top of class')}{fld('deadline','Application deadline','e.g. 1 Jan (Regular)')}{fld('url','Official admissions link','https://…')}</div>
       <label className="block text-sm font-medium">Scholarships<textarea rows="3" className={inp+' mt-1.5'} value={form.scholarship||''} onChange={e=>setForm({...form,scholarship:e.target.value})}/></label>
       <label className="block text-sm font-medium">How to apply<textarea rows="4" className={inp+' mt-1.5'} value={form.how||''} onChange={e=>setForm({...form,how:e.target.value})}/></label>
-      <div className="flex items-center gap-3"><button className={prim} onClick={saveUni}>Save</button>{saved&&<span className="text-sm text-slate-500">{saved}</span>}</div></div>}
+      <div className="flex items-center gap-3"><button className={prim} onClick={saveUni}>Save</button>{saved&&<span className="text-sm text-slate-500">{saved}</span>}</div>
+      <div className="pt-6 border-t border-slate-200 dark:border-white/10"><h3 className="font-semibold mb-1">Bulk import</h3><p className="text-xs text-slate-500 mb-2">One university per line, fields separated by | in this order: name | IELTS | TOEFL | SAT/ACT | GPA | deadline | scholarship | how to apply | link. The name must match the list (part of the name is enough).</p><textarea rows="6" className={inp+' font-mono text-xs'} value={bulk} onChange={e=>setBulk(e.target.value)} placeholder="Harvard University | no minimum | 100 | SAT or ACT | top of class | 1 Jan | need-based aid | apply via Common App | https://..."/><div className="flex items-center gap-3 mt-2"><button className={ghost} onClick={bulkImport} disabled={!bulk.trim()}>Import</button>{bulkMsg&&<span className="text-xs text-slate-500">{bulkMsg}</span>}</div></div></div>}
   </AdminShell>;
+}
+
+function AuthCard({api}){
+  const [mode,setMode]=useState('signup'),[em,setEm]=useState(''),[pw,setPw]=useState(''),[msg,setMsg]=useState(''),[err,setErr]=useState(''),[busy,setBusy]=useState(false);
+  const run=async f=>{setErr('');setMsg('');setBusy(true);try{await f()}catch(e){setErr((e&&e.message)||String(e))}setBusy(false)};
+  const submit=()=>{if(!em.trim()||!pw)return setErr(tr('Please enter email and password.'));if(pw.length<6)return setErr(tr('Use at least 6 characters.'));
+    run(async()=>{if(mode==='signup'){const r=await api.signUp(em.trim(),pw);if(r.needsConfirm)setMsg(tr('Check your email to confirm your account, then sign in.'));else location.reload()}else{await api.signIn(em.trim(),pw);location.reload()}})};
+  const magic=()=>{if(!em.trim())return setErr(tr('Please enter your email.'));run(async()=>{await api.magic(em.trim());setMsg(tr('Check your email for the link.'))})};
+  return <div className={`${card} p-7 max-w-md mx-auto up`}>
+    <h2 className="text-2xl">{mode==='signup'?tr('Create your account'):tr('Welcome back')}</h2>
+    <p className="text-sm text-slate-500 mt-1">{mode==='signup'?tr('Create an account to make your profile, chat and book sessions.'):tr('Sign in to open your profile.')}</p>
+    <button disabled={busy} onClick={()=>run(()=>api.google())} className={`${btn} w-full mt-6 border border-slate-300 dark:border-white/20 bg-white dark:bg-slate-800 text-slate-800 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 !py-3`}>
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+      {tr('Continue with Google')}</button>
+    <div className="flex items-center gap-3 my-5 text-xs text-slate-400"><span className="flex-1 h-px bg-slate-200 dark:bg-white/10"/>{tr('or')}<span className="flex-1 h-px bg-slate-200 dark:bg-white/10"/></div>
+    <div className="space-y-3"><input className={inp} type="email" placeholder={tr('Email')} value={em} onChange={e=>setEm(e.target.value)}/><input className={inp} type="password" placeholder={tr('Password')} value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&submit()}/></div>
+    {err&&<p className="text-xs text-red-500 mt-3">{err}</p>}{msg&&<p className="text-xs text-emerald-600 dark:text-emerald-400 mt-3">{msg}</p>}
+    <button disabled={busy} onClick={submit} className={prim+' w-full mt-4 !py-3'}>{mode==='signup'?tr('Create account'):tr('Sign in')}</button>
+    <button disabled={busy} onClick={magic} className="w-full mt-3 text-sm text-violet-600 dark:text-violet-300 hover:underline">{tr('Email me a sign-in link')}</button>
+    <p className="text-sm text-slate-500 text-center mt-6">{mode==='signup'?<>{tr('Have an account?')} <button className="font-semibold text-violet-600 dark:text-violet-300 hover:underline" onClick={()=>{setMode('signin');setErr('');setMsg('')}}>{tr('Sign in')}</button></>:<>{tr('New here?')} <button className="font-semibold text-violet-600 dark:text-violet-300 hover:underline" onClick={()=>{setMode('signup');setErr('');setMsg('')}}>{tr('Create account')}</button></>}</p>
+  </div>;
 }
 
 const Mark=()=><span className="font-display text-xl tracking-tight">Study<span className="text-violet-600">match</span></span>;
 const LangSwitch=({lang,set})=><div className="flex text-xs font-semibold border border-slate-200 dark:border-white/15 rounded-lg overflow-hidden">{['en','ru','uz'].map(l=><button key={l} onClick={()=>set(l)} className={`px-2.5 py-1.5 uppercase transition ${lang===l?'bg-slate-900 text-white dark:bg-white dark:text-slate-900':'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10'}`}>{l}</button>)}</div>;
 
 function Landing({onEnter,onAdmin,dark,setDark,lang,setLang}){
-  const F=[['People','Filter by major, age, school and skills. Send a request, then chat or call inside the site.'],['Universities','The QS World University Rankings 2027 top 100, with country, city and a link to each QS profile.'],['Schools with scholarships','Schools that have offered scholarships to Uzbek students, and how to apply.'],['Guides and files','IELTS and SAT notes, what a foreign degree means in Uzbekistan, scholarships, and files students share.'],['Calendar','Deadlines and study sessions with friends in one place.'],['Essays','Read essays with reviews, or post your own.']];
+  const F=[['People','Filter by major, age, school and skills. Send a request, then chat or call inside the site.'],['Universities','The QS World University Rankings 2027 top 100, with country, city and a link to each QS profile.'],['Schools with scholarships','Schools that have offered scholarships to Uzbek students, and how to apply.'],['Exams','Find your study match for exam preparation or building a startup. Guides, practice tests, scholarships and files students share.'],['Calendar','Deadlines and study sessions with friends in one place.'],['Essays','Read essays with reviews, or post your own.']];
   const Q=[['Who is it for?','Students in schools and universities who want a study partner, a co-founder, or just clearer information about studying abroad.'],['How do I join?','Open the invite link, make a profile, and you show up for other members.'],['Is the university data official?','Ranks and names come from the QS World University Rankings 2027. Each university links to its own QS page for details.']];
   const go=t=>()=>{window.scrollTo(0,0);onEnter(t)};
   return <div className="min-h-screen">
     <header className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between"><Mark/><div className="flex items-center gap-2"><LangSwitch lang={lang} set={setLang}/><button onClick={()=>setDark(!dark)} className="p-2 rounded-lg border border-slate-200 dark:border-white/15 hover:bg-slate-100 dark:hover:bg-white/10" aria-label={tr('Toggle theme')}><I n={dark?'sun':'moon'} c="w-4 h-4"/></button></div></header>
     <section className="max-w-5xl mx-auto px-5 pt-14 sm:pt-24 pb-16 border-b border-slate-200 dark:border-white/10">
       <h1 className="text-4xl sm:text-6xl leading-[1.05] max-w-3xl">{tr('Find someone to study with. Or to build something with.')}</h1>
-      <p className="mt-6 text-lg text-slate-600 dark:text-slate-300 max-w-2xl">{tr('Studymatch is where students in Uzbekistan and beyond find study partners and co-founders, prepare for IELTS and SAT, and compare universities and scholarships without ten tabs open.')}</p>
+      <p className="mt-6 text-lg text-slate-600 dark:text-slate-300 max-w-2xl">{tr('Find your study match for exam preparation or building a startup. Studymatch is where students in Uzbekistan and beyond find study partners and co-founders, prepare for exams, and compare universities and scholarships without ten tabs open.')}</p>
       <div className="mt-8 flex flex-wrap gap-3"><button onClick={go('profile')} className={prim+' !px-6 !py-3'}>{tr('Create a profile')}</button><button onClick={go('discover')} className={ghost+' !px-6 !py-3'}>{tr('Look around')}</button></div>
     </section>
     <section className="max-w-5xl mx-auto px-5 py-16 border-b border-slate-200 dark:border-white/10"><h2 className="text-3xl mb-10">{tr('What is inside')}</h2>
@@ -592,22 +841,24 @@ function NotifPanel({items,onClose,go,answerReq,answerSess,askDesktop}){
 function App(){
   const LINK=location.href.split('#')[0]+'#join';
   const [lang,setLangS]=useState(LANG),[dark,setDark]=useState(()=>matchMedia('(prefers-color-scheme: dark)').matches),[tab,setTab]=useState(()=>location.hash==='#join'?'profile':'discover');
-  const [me,setMe]=useState({name:'',age:'',major:'',inst:'',skills:'',goal:'',mode:'both',type:'University'}),[joined,setJoined]=useState(false);
+  const [me,setMe]=useState({name:'',age:'',major:'',inst:'',skills:'',goal:'',mode:'both',type:'University',target:''}),[joined,setJoined]=useState(false);
   const [db,setDb]=useState(null),[rt,setRt]=useState(null),[myId,setMyId]=useState('local'),[people,setPeople]=useState([]),[all,setAll]=useState([]),[priv,setPriv]=useState([]),[reqs,setReqs]=useState([]),[sess,setSess]=useState([]),[mats,setMats]=useState([]),[ess,setEss]=useState([]);
-  const [tests,setTests]=useState([]),[uinfoArr,setUinfoArr]=useState([]),[admin,setAdmin]=useState(()=>location.hash==='#admin'),[landing,setLanding]=useState(true),[active,setActive]=useState(null),[inv,setInv]=useState(false),[toast,setToast]=useState(''),[cmd,setCmd]=useState(null),[nOpen,setNOpen]=useState(false),[seen,setSeen]=useState(0),[mf,setMf]=useState('');
+  const [authApi,setAuthApi]=useState(null),[auth,setAuth]=useState(undefined),[tests,setTests]=useState([]),[uinfoArr,setUinfoArr]=useState([]),[admin,setAdmin]=useState(()=>location.hash==='#admin'),[landing,setLanding]=useState(true),[active,setActive]=useState(null),[inv,setInv]=useState(false),[toast,setToast]=useState(''),[cmd,setCmd]=useState(null),[nOpen,setNOpen]=useState(false),[seen,setSeen]=useState(0),[mf,setMf]=useState('');
   PEOPLE=people;
   const setLang=l=>{setLang0(l);setLangS(l)};
   useEffect(()=>{document.documentElement.classList.toggle('dark',dark);document.documentElement.lang=lang},[dark,lang]);
   useEffect(()=>{let off=[];(async()=>{try{if(!window.claude)return;const u=await claude.use('user'),d=await claude.use('db');const id=u?await u.id():'local';setMyId(id);if(!d)return;setDb(d);try{setRt(await claude.use('rt'))}catch(e){}
+    try{const a=await claude.use('auth');if(a){setAuthApi(a);setAuth(await a.user())}else setAuth(false)}catch(e){setAuth(false)}
     const sub=(p,f)=>off.push(d.collection(p).onSnapshot(s=>f(s.docs.map(x=>({id:x.id,...x.data()})))));
     sub('members',a=>{setPeople(a.filter(p=>p.id!==id));const mine=a.find(p=>p.id===id);if(mine){setMe(m=>({...m,...mine,skills:(mine.skills||[]).join(', ')}));setJoined(true)}});
     sub('msgs',setAll);sub('data/users/'+id,setPriv);sub('requests',setReqs);sub('sessions',setSess);sub('materials',setMats);sub('essays',setEss);sub('tests',setTests);sub('uni_info',setUinfoArr);}catch(e){}})();return()=>off.forEach(f=>typeof f==='function'&&f())},[]);
   useEffect(()=>{try{setSeen(+localStorage.getItem('sm-seen-'+myId)||0)}catch(e){}},[myId]);
+  useEffect(()=>{if(auth&&!auth.anon&&auth.name)setMe(m=>m.name?m:{...m,name:auth.name})},[auth]);
   const flash=t=>{setToast(t);setTimeout(()=>setToast(''),3200)};
   const need=()=>{flash(tr('Open the shared link while signed in to join the community.'));return false};
   const clean=o=>Object.fromEntries(Object.entries(o).filter(([,v])=>v!==undefined));
   const saveMe=async f=>{setMe(f);if(!db)return need();
-    try{await db.collection('members').doc(myId).set({name:f.name||'Student',age:+f.age||18,major:(f.major||'').trim()||'—',inst:f.inst||'—',type:f.type||'University',skills:f.skills.split(',').map(s=>s.trim()).filter(Boolean),goal:f.goal||'',mode:f.mode||'both',photo:f.photo||'',hue:[...myId].reduce((a,c)=>a*31+c.charCodeAt(0),7)%360});setJoined(true);return true}catch(e){flash(tr('Could not save profile.'));return false}};
+    try{await db.collection('members').doc(myId).set({name:f.name||'Student',age:+f.age||18,major:(f.major||'').trim()||'—',inst:f.type==='School'?'—':(f.inst||'—'),target:f.target||'',type:f.type||'University',skills:f.skills.split(',').map(s=>s.trim()).filter(Boolean),goal:f.goal||'',mode:f.mode||'both',photo:f.photo||'',hue:[...myId].reduce((a,c)=>a*31+c.charCodeAt(0),7)%360});setJoined(true);return true}catch(e){flash(tr('Could not save profile.'));return false}};
   const send=(to,t,extra={})=>{if(!db){need();return Promise.reject(new Error('not signed in'))}return db.collection('msgs').add(clean({from:myId,to,t,ts:Date.now(),...extra}))};
   const saved=priv.filter(x=>!x.deadline),deadlines=priv.filter(x=>x.deadline);
   const saveItem=(t,extra={})=>{if(!db){need();return Promise.reject(new Error('not signed in'))}return db.collection('data/users/'+myId).add(clean({t:t||'',ts:Date.now(),...extra}))};
@@ -668,7 +919,7 @@ function App(){
       {tab==='materials'&&<Materials db={db} myId={myId} me={me} flash={flash} send={send} tests={tests}/>}
       {tab==='calendar'&&<Calendar myId={myId} friends={friends} deadlines={deadlines} sessions={sess} addDeadline={addDeadline} toggleDeadline={toggleDeadline} delDeadline={delDeadline} book={book} answer={answerSess} cancel={cancelSess} call={startCall}/>}
       {tab==='messages'&&<Messages conn={friends} active={active} setActive={setActive} msgs={all} send={send} myId={myId} saved={saved} saveItem={saveItem} delSaved={delSaved} flash={flash} startCall={startCall}/>}
-      {tab==='profile'&&<><Head t={joined?'Your profile':'Join Studymatch'} s="Keep it fresh so the right people find you."/><Profile me={me} setMe={saveMe}/></>}
+      {tab==='profile'&&(authApi&&auth===undefined?<p className="text-slate-500 py-10 text-center">…</p>:authApi&&(!auth||auth.anon)?<AuthCard api={authApi}/>:<><Head t={joined?'Your profile':'Join Studymatch'} s="Keep it fresh so the right people find you."/>{authApi&&auth&&<div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-slate-500"><span>{tr('Signed in as')} {auth.email||auth.name}</span><button className="underline" onClick={async()=>{try{await authApi.signOut()}catch(e){}location.hash='';location.reload()}}>{tr('Sign out')}</button></div>}<Profile me={me} setMe={saveMe}/></>)}
     </main>
     <footer className="max-w-6xl mx-auto px-4 pb-24 lg:pb-8 text-center"><button onClick={goAdmin} className="text-[10px] text-slate-400/50 hover:text-slate-500">admin</button></footer>
     {inv&&<Modal onClose={()=>setInv(false)}><h3 className="font-display text-xl">{tr('Invite students')}</h3><p className="text-sm text-slate-500 mt-1 mb-4">{tr('Share this link. Whoever opens it can create a profile and join Studymatch.')}</p><input readOnly className={inp} value={LINK} onFocus={e=>e.target.select()}/><button className={prim+' w-full mt-3'} onClick={copy}>{tr('Copy link')}</button></Modal>}
